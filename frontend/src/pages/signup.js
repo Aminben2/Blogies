@@ -42,7 +42,7 @@ export const Signup = () => {
     setError(null);
 
     if (formData.password === formData.confirmPassword) {
-      const response = await fetch("/api/users/signup", {
+      const response = await fetch("http://localhost:4000/api/users/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

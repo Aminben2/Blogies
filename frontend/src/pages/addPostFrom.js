@@ -45,8 +45,8 @@ function AddPostFrom() {
       img: "./imgs/blog-2.jpg",
       comments: [],
     };
-
-    const response = await fetch("/api/blogs/addBlog", {
+    // {"_id":"65a2b23ba16608ac54bf9380","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWEyYjIzYmExNjYwOGFjNTRiZjkzODAiLCJpYXQiOjE3MDc5MjE3MTksImV4cCI6MTcwODE4MDkxOX0.5wTjOeOkIsy-zstV0H2JmNH7Jp9YJ9Dy6as1s1Cjngw"}
+    const response = await fetch("http://localhost:4000/api/blogs/", {
       method: "POST",
       body: JSON.stringify(blog),
       headers: {

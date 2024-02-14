@@ -20,15 +20,19 @@ export const Comment = (props) => {
   const pin = () => {};
 
   const appreciate = () => {};
+
   const deleteComment = async (postId, commentId) => {
-    const response = await fetch("api/profile/delComment", {
-      method: "PATCH",
-      body: JSON.stringify({ postId, commentId }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-    });
+    const response = await fetch(
+      "http://localhost:4000/api/profile/delComment",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ postId, commentId }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
 
     const json = await response.json();
 

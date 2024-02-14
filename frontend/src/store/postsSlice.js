@@ -25,7 +25,7 @@ export const getOnePost = createAsyncThunk("post/getOnePost", async (id) => {
   const user = JSON.parse(localStorage.getItem("login"));
 
   try {
-    const response = await fetch(`/api/blogs/${id}`, {
+    const response = await fetch(`http://localhost:4000/api/blogs/${id}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${user.token}`,
@@ -45,12 +45,15 @@ export const getOnePost = createAsyncThunk("post/getOnePost", async (id) => {
 export const getUserPosts = createAsyncThunk("posts/getUserPosts", async () => {
   const user = JSON.parse(localStorage.getItem("login"));
   try {
-    const response = await fetch(`/api/profile/${user._id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-    });
+    const response = await fetch(
+      `http://localhost:4000/api/profile/${user._id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Could not fetch user blogs");

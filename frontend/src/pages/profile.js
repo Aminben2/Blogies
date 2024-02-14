@@ -18,7 +18,6 @@ const Profile = () => {
   const [showControls, setShowControls] = useState(false);
   const [showConfimrModel, setShowConfirmModel] = useState(false);
   const [privacyUpdate, setPrivacyUpdate] = useState(false);
-  // const [privacy, setPrivacy] = useState({ private: false, postId: "" });
 
   const dispatch = useDispatch();
 
@@ -26,7 +25,7 @@ const Profile = () => {
     dispatch(getUserPosts());
   }, [dispatch]);
   const updatePrivacy = async (obj) => {
-    const response = await fetch(`/api/profile/privacy`, {
+    const response = await fetch(`http://localhost:4000/api/profile/privacy`, {
       method: "PATCH",
       body: JSON.stringify(obj.privacy),
       headers: {
@@ -50,7 +49,7 @@ const Profile = () => {
   };
 
   const deleteBlog = async (id) => {
-    const response = await fetch(`/api/blogs/${id}`, {
+    const response = await fetch(`http://localhost:4000/api/profile/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -141,8 +140,8 @@ const Profile = () => {
             <li
               className="cursor-pointer font-medium text-xs"
               onClick={editBlog}
-            >/
-              Edit blog
+            >
+              / Edit blog
             </li>
             <li
               className="cursor-pointer font-medium text-xs"

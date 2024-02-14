@@ -8,13 +8,13 @@ const {
 } = require("../controllers/profileController");
 const requireAuth = require("../middleware/requireAuth");
 
-// router.use(requireAuth);
+router.use(requireAuth);
 
 router.get("/:id", getUserPost);
 
-router.patch("/privacy", changePrivacy);
+router.patch("/:id/privacy", changePrivacy);
 
-router.patch("/delComment", deleteComment);
+router.patch("/:id/delComment", deleteComment);
 
 router.delete("/:id", deleteUserBlog);
 
