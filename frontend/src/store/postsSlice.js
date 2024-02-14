@@ -101,12 +101,11 @@ const postSlice = createSlice({
       state.userPosts = state.userPosts.filter((post) => post._id !== postId);
     },
     changePrivacy(state, action) {
-      //   const { private, postId } = action.payload;
       const wantedPost = state.userPosts.find(
         (post) => post._id === action.payload.postId
       );
       if (wantedPost) {
-        wantedPost.privacy = !wantedPost.private;
+        wantedPost.private = !wantedPost.private;
       }
     },
     delComment(state, action) {

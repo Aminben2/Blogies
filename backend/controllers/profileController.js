@@ -29,12 +29,11 @@ const deleteUserBlog = async (req, res) => {
 };
 
 const changePrivacy = async (req, res) => {
-  const { postId, private } = req.body;
-
-  console.log("useeeeee");
+  const { private } = req.body;
+  const { id } = req.params;
 
   const post = await Blogs.findByIdAndUpdate(
-    { _id: postId },
+    { _id: id },
     { $set: { private: private } }
   );
   if (!post)

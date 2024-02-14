@@ -2,7 +2,7 @@ import React from 'react'
 
 const OnePostLoader = () => {
     return (
-        <div className=" p-4 w-1/2 h-screen m-auto bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow hover:shadow-md rounded-lg">
+        <div className=" p-4 w-1/2 h-screen m-auto bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow hover:shadow-md ">
             <div className="animate-pulse flex flex-col">
                 <div className="rounded w-full h-52 bg-gray-200 dark:bg-gray-700"></div>
                 <div className="flex flex-col mt-5">
