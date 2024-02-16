@@ -21,7 +21,8 @@ const getOneBlog = async (req, res) => {
 };
 
 const AddBlog = async (req, res) => {
-  const { title, content, userId, reactions, comments, img } = req.body;
+  const { title, content, userId, reactions, comments, img, category, tags } =
+    req.body;
   const blogObject = {
     title,
     content,
@@ -29,6 +30,8 @@ const AddBlog = async (req, res) => {
     reactions,
     comments,
     img,
+    category,
+    tags,
   };
 
   try {

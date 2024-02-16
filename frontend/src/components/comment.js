@@ -5,6 +5,7 @@ import { getUsers } from "../store/usersSlice";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { delComment } from "../store/postsSlice";
 import { pinCom } from "../store/postsSlice";
+import { apreCom } from "../store/postsSlice";
 import { NavLink } from "react-router-dom";
 
 export const Comment = (props) => {
@@ -57,7 +58,29 @@ export const Comment = (props) => {
     }
   };
 
-  const appreciate = () => {};
+  const appreciate = async (commentId, postId) => {
+    const com = { postId, commentId };
+    const response = await fetch(
+      `http://localhost:4000/api/profile/${commentId}/apreciateComment`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(com),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+
+    const json = await response.json();
+
+    if (response.ok) {
+      dispatch(apreCom(com));
+      setShowCommentControls(false);
+    } else {
+      console.log(json.error);
+    }
+  };
 
   const deleteComment = async (commentId, postId) => {
     const com = { postId, commentId };
@@ -107,6 +130,15 @@ export const Comment = (props) => {
                       })
                     : "Just now"}
                 </span>
+                {props.loved && (
+                  <div className="loved">
+                    <img
+                      src="/imgs/loved.png"
+                      alt="loved"
+                      className="w-5 ms-2"
+                    />
+                  </div>
+                )}
                 {props.author === "true" && (
                   <span className="ml-2 text-xs underline text-gray-500 dark:text-gray-900 font-bold">
                     Author
@@ -160,7 +192,7 @@ export const Comment = (props) => {
                     </li>
                     <li
                       className="cursor-pointer font-medium text-xs"
-                      onClick={appreciate}
+                      onClick={() => appreciate(props._id, props.postId)}
                     >
                       Appreciate
                     </li>

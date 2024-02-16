@@ -130,6 +130,19 @@ const postSlice = createSlice({
         }
       }
     },
+    apreCom(state, action) {
+      const { postId, commentId } = action.payload;
+      const existingPost = state.userPosts.find((post) => post._id === postId);
+      if (existingPost) {
+        const existingCommentIndex = existingPost.comments.findIndex(
+          (comment) => comment._id === commentId
+        );
+        if (existingCommentIndex !== -1) {
+          existingPost.comments[existingCommentIndex].loved =
+            !existingPost.comments[existingCommentIndex].loved;
+        }
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -174,5 +187,6 @@ export const {
   changePrivacy,
   delComment,
   pinCom,
+  apreCom,
 } = postSlice.actions;
 export default postSlice;

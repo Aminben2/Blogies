@@ -87,14 +87,41 @@ const pinComment = async (req, res) => {
   }
 };
 
-const apreciateComment = () => {
-  
-}
-  
+const apreciateComment = async (req, res) => {
+  const { postId } = req.body;
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(postId))
+    return res.status(501).json({ error: "Blog id is not valid !" });
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(501).json({ error: "Comment id is not valid !" });
+
+  const existingComment = await Blogs.findOne(
+    { _id: postId, "comments._id": id },
+    { "comments.$": 1 }
+  );
+  if (!existingComment)
+    return res.status(400).json({ error: "Comment not found" });
+
+  if (existingComment && existingComment.comments.length > 0) {
+    const currentPinnedValue = existingComment.comments[0].loved;
+
+    // Perform the update
+    const blog = await Blogs.findOneAndUpdate(
+      { _id: postId, "comments._id": id }, // Match the blog and the comment
+      { $set: { "comments.$.loved": !currentPinnedValue } }, // Toggle the value of pinned
+      { new: true }
+    );
+    if (!blog) return res.status(400).json({ error: "Blog not found" });
+    return res.status(200).json(blog);
+  }
+};
+
 module.exports = {
   deleteComment,
   changePrivacy,
   deleteUserBlog,
   getUserPost,
   pinComment,
+  apreciateComment
 };
