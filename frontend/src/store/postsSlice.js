@@ -143,6 +143,13 @@ const postSlice = createSlice({
         }
       }
     },
+    toggleCmnts(state, action) {
+      const { id } = action.payload;
+      const existingPost = state.userPosts.find((post) => post._id === id);
+      if (existingPost) {
+        existingPost.ifCommentsEnabaled = !existingPost.ifCommentsEnabaled;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -187,6 +194,7 @@ export const {
   changePrivacy,
   delComment,
   pinCom,
+  toggleCmnts,
   apreCom,
 } = postSlice.actions;
 export default postSlice;

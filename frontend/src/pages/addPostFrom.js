@@ -25,7 +25,7 @@ function AddPostFrom() {
       };
     });
   }
-
+  console.log(postInfo);
   const canAddPost =
     Boolean(postInfo.title) &&
     Boolean(postInfo.content) &&
@@ -178,7 +178,8 @@ function AddPostFrom() {
               value={postInfo.category}
               onChange={handleChange}
             >
-              <option value={"sport"}>sport</option>
+              <option value="sport">sport</option>
+              <option value="travel">Travel</option>
             </select>
           </div>
 

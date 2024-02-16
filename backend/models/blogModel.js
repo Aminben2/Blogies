@@ -24,11 +24,11 @@ const blogSchema = new Schema(
     },
     tags: {
       type: String,
-      required:false
+      required: false,
     },
     category: {
       type: String,
-      required:true
+      required: true,
     },
     userId: {
       type: String,
@@ -41,6 +41,11 @@ const blogSchema = new Schema(
     img: {
       type: String,
       required: false,
+    },
+    ifCommentsEnabaled: {
+      type: Boolean,
+      required: true,
+      default: true,
     },
     comments: {
       type: [commentSchema],

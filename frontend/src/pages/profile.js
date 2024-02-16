@@ -4,6 +4,7 @@ import {
   changePrivacy,
   deleteUserPost,
   getUserPosts,
+  toggleCmnts,
 } from "../store/postsSlice";
 import { Comment } from "../components/comment";
 import { formatDistanceToNow } from "date-fns";
@@ -90,6 +91,27 @@ const Profile = () => {
     }
   };
 
+  const toggleComments = async (id) => {
+    const res = await fetch(
+      `http://localhost:4000/api/profile/${id}/toggleComments`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "Application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+    const json = await res.json();
+    if (res.ok) {
+      // update the state
+      dispatch(toggleCmnts({ id }));
+      setShowControls(false);
+    } else {
+      console.log(json.error);
+    }
+  };
+
   const editBlog = async () => {};
   const closeAll = () => {
     setPrivacyUpdate(false);
@@ -99,6 +121,7 @@ const Profile = () => {
     document.body.style.overflow = "auto";
     setShowConfirmModel(false);
   };
+
   const blogs = posts.map((blog) => {
     return (
       <section key={blog._id} className="post one dark:bg-gray-800 relative">
@@ -142,6 +165,12 @@ const Profile = () => {
               onClick={editBlog}
             >
               Edit blog
+            </li>
+            <li
+              className="cursor-pointer font-medium text-xs"
+              onClick={() => toggleComments(blog._id)}
+            >
+              {blog.ifCommentsEnabaled ? "Disable comments" : "Enable comments"}
             </li>
             <li
               className="cursor-pointer font-medium text-xs"
@@ -190,37 +219,63 @@ const Profile = () => {
           {blog.content}
         </p>
         <div className="comments flex flex-row dark:bg-gray-600 transition duration-300">
-          <div
-            className="flex flex-row justify-between"
-            onClick={() => setShowCmnt((pre) => !pre)}
-          >
-            <p className="dark:text-gray-100">
-              {blog.comments ? blog.comments.length : "0"} Comments
-            </p>
-            {!mode ? (
-              <img
-                src={showComments ? "./imgs/up-arrow.png" : "./imgs/arrow.png"}
-                alt=""
-                className="w-5 h-5"
-              />
-            ) : (
-              <img
-                src={
-                  showComments
-                    ? "./imgs/up-arrow-light.png"
-                    : "./imgs/arrow-light.png"
-                }
-                alt=""
-                className="w-5 h-5"
-              />
-            )}
-          </div>
+          {blog.ifCommentsEnabaled ? (
+            <div
+              className="flex flex-row justify-between"
+              onClick={() => setShowCmnt((pre) => !pre)}
+            >
+              <p className="dark:text-gray-100">
+                {blog.comments ? blog.comments.length : "0"} Comments
+              </p>
+              {!mode ? (
+                <img
+                  src={
+                    showComments ? "./imgs/up-arrow.png" : "./imgs/arrow.png"
+                  }
+                  alt=""
+                  className="w-5 h-5"
+                />
+              ) : (
+                <img
+                  src={
+                    showComments
+                      ? "./imgs/up-arrow-light.png"
+                      : "./imgs/arrow-light.png"
+                  }
+                  alt=""
+                  className="w-5 h-5"
+                />
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-row justify-between">
+              <p className="dark:text-gray-100">Comments are disabled</p>
+              {!mode ? (
+                <img
+                  src={
+                    showComments ? "./imgs/up-arrow.png" : "./imgs/arrow.png"
+                  }
+                  alt=""
+                  className="w-5 h-5"
+                />
+              ) : (
+                <img
+                  src={
+                    showComments
+                      ? "./imgs/up-arrow-light.png"
+                      : "./imgs/arrow-light.png"
+                  }
+                  alt=""
+                  className="w-5 h-5"
+                />
+              )}
+            </div>
+          )}
 
           {showComments && (
             <div className="all-comments">
               {blog.comments && blog.comments.length > 0 ? (
                 <>
-                  {/* Separate pinned comments from non-pinned comments */}
                   {blog.comments
                     .filter((comment) => comment.pinned)
                     .map((ele) => (

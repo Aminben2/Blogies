@@ -26,7 +26,6 @@ export const Blog = () => {
       (comment) => !comment.pinned
     );
     postComments = [
-      // Render pinned comments at the top
       ...pinnedComments.map((ele) => (
         <Comment
           key={ele._id}
@@ -34,7 +33,6 @@ export const Blog = () => {
           author={user._id === ele.userId ? "true" : "false"}
         />
       )),
-      // Render non-pinned comments after pinned comments
       ...nonPinnedComments.map((ele) => (
         <Comment
           key={ele._id}
@@ -84,7 +82,6 @@ export const Blog = () => {
     }
     setComment("");
   };
-
   return (
     <>
       {isLoadigOnePost ? (
@@ -118,19 +115,21 @@ export const Blog = () => {
                 </span>
               )}
             </div>
-            <form className="comment-form" onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="comment"
-                placeholder="Leave Your Comment"
-                onChange={handleChange}
-                value={comment}
-                required
-                className="dark:bg-gray-500 placeholder:text-gray-300 dark:text-gray-100"
-              />
-              <button type="submit">Comment</button>
-              {error && <span className="err">{error}</span>}
-            </form>
+            {onePost.ifCommentsEnabaled && (
+              <form className="comment-form" onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  name="comment"
+                  placeholder="Leave Your Comment"
+                  onChange={handleChange}
+                  value={comment}
+                  required
+                  className="dark:bg-gray-500 placeholder:text-gray-300 dark:text-gray-100"
+                />
+                <button type="submit">Comment</button>
+                {error && <span className="err">{error}</span>}
+              </form>
+            )}
           </div>
         </section>
       )}

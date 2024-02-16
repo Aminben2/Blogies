@@ -117,11 +117,33 @@ const apreciateComment = async (req, res) => {
   }
 };
 
+const toggleComments = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(500).json({ error: "Blog id is not valid !" });
+  }
+
+  const wantedBlog = await Blogs.findOne({ _id: id });
+  const toggledValue = !wantedBlog.ifCommentsEnabaled;
+  const blog = await Blogs.findByIdAndUpdate(
+    { _id: id },
+    {
+      $set: { ifCommentsEnabaled: toggledValue },
+    }
+  );
+
+  if (!blog) {
+    return res.status(404).json({ error: "Blog not found" });
+  }
+  res.status(200).json(blog);
+};
+
 module.exports = {
   deleteComment,
   changePrivacy,
   deleteUserBlog,
   getUserPost,
   pinComment,
-  apreciateComment
+  apreciateComment,
+  toggleComments,
 };
