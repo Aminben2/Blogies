@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../store/postsSlice";
 import { nanoid } from "@reduxjs/toolkit";
+import { useNavigate } from "react-router-dom";
 
 function AddPostFrom() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth);
-
+  const navigate = useNavigate();
   let [postInfo, setPostInfo] = React.useState({
     title: "",
     content: "",
@@ -66,6 +67,7 @@ function AddPostFrom() {
           _id: nanoid(),
         })
       );
+      navigate("/blogs");
     }
 
     setPostInfo({

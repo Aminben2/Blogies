@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../store/usersSlice";
 
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { delComment } from "../store/postsSlice";
+import { pinCom } from "../store/postsSlice";
+import { NavLink } from "react-router-dom";
 
 export const Comment = (props) => {
   const { users } = useSelector((state) => state.users);
@@ -11,22 +13,59 @@ export const Comment = (props) => {
   const user = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowCommentControls(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const userComment = users.find((user) => user._id === props.userId);
 
-  const pin = () => {};
+  const pinComment = async (commentId, postId) => {
+    const res = await fetch(
+      `http://localhost:4000/api/profile/${commentId}/pinComment`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ commentId, postId }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+    const json = await res.json();
+
+    if (res.ok) {
+      // Update the state in redux
+      dispatch(pinCom({ commentId, postId }));
+      setShowCommentControls(false);
+    } else {
+      console.log(json.error);
+    }
+  };
 
   const appreciate = () => {};
 
-  const deleteComment = async (postId, commentId) => {
+  const deleteComment = async (commentId, postId) => {
+    const com = { postId, commentId };
     const response = await fetch(
-      "http://localhost:4000/api/profile/delComment",
+      `http://localhost:4000/api/profile/${commentId}/delComment`,
       {
         method: "PATCH",
-        body: JSON.stringify({ postId, commentId }),
+        body: JSON.stringify(com),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
@@ -37,7 +76,8 @@ export const Comment = (props) => {
     const json = await response.json();
 
     if (response.ok) {
-      dispatch(delComment({ postId, commentId }));
+      dispatch(delComment(com));
+      setShowCommentControls(false);
     } else {
       console.log(json.error);
     }
@@ -48,14 +88,18 @@ export const Comment = (props) => {
       {userComment && (
         <div className="cmnt w-fit py-4 mt-3 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg sm:shadow-sm md:w-2/3 dark:bg-gray-400 dark:border-0">
           <div className="relative flex flex-row md-10">
-            <img
-              className="w-12 h-12 border-2 border-gray-300 rounded-full"
-              alt="Anonymous's avatar"
-              src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&faces=1&faceindex=1&facepad=2.5&w=500&h=500&q=80"
-            />
+            <NavLink to="/profile/:id">
+              <img
+                className="w-12 h-12 border-2 border-gray-300 rounded-full"
+                alt="Anonymous's avatar"
+                src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&faces=1&faceindex=1&facepad=2.5&w=500&h=500&q=80"
+              />
+            </NavLink>
             <div className="flex-col mt-1">
               <div className="flex items-center flex-1 px-4 font-bold leading-tight">
-                {userComment.firstName} {userComment.lastName}
+                <NavLink to="/profile/:id">
+                  {userComment.firstName} {userComment.lastName}
+                </NavLink>
                 <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-700">
                   {props.createdAt
                     ? formatDistanceToNow(new Date(props.createdAt), {
@@ -63,6 +107,20 @@ export const Comment = (props) => {
                       })
                     : "Just now"}
                 </span>
+                {props.author === "true" && (
+                  <span className="ml-2 text-xs underline text-gray-500 dark:text-gray-900 font-bold">
+                    Author
+                  </span>
+                )}
+                {props.pinned && (
+                  <div className="pinned">
+                    <img
+                      src="/imgs/pinned.png"
+                      alt="onned-icon"
+                      className="w-5 ms-2"
+                    />
+                  </div>
+                )}
               </div>
               <div className="flex-1 px-2 ml-2 text-sm font-medium leading-loose text-gray-600 dark:text-white">
                 {props.comment}
@@ -84,22 +142,21 @@ export const Comment = (props) => {
                 </span>
                 {showCommentControls && (
                   <ul
+                    ref={menuRef}
                     onMouseLeave={() => setShowCommentControls(false)}
                     className={`absolute flex flex-col transition gap-2 top-10 right-0 bg-gray-200 text-gray-800 p-2 rounded-md z-30 dark:bg-gray-300 duration-500 ctrl-comment`}
                   >
                     <li
                       className="cursor-pointer font-medium text-xs"
-                      onClick={() =>
-                        deleteComment(props.commentId, props.postId)
-                      }
+                      onClick={() => deleteComment(props._id, props.postId)}
                     >
                       Delete
                     </li>
                     <li
                       className="cursor-pointer font-medium text-xs"
-                      onClick={pin}
+                      onClick={() => pinComment(props._id, props.postId)}
                     >
-                      Pin{" "}
+                      {props.pinned ? "Unpin" : "Pin"}
                     </li>
                     <li
                       className="cursor-pointer font-medium text-xs"

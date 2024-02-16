@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   changePrivacy,
@@ -21,7 +21,21 @@ const Profile = () => {
   const [privacyUpdate, setPrivacyUpdate] = useState(false);
 
   const dispatch = useDispatch();
+  const menuRef = useRef(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowControls(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   useEffect(() => {
     dispatch(getUserPosts());
   }, [dispatch]);
@@ -111,6 +125,7 @@ const Profile = () => {
           </span>
 
           <ul
+            ref={menuRef}
             onMouseLeave={closeAll}
             className={`blog-controls absolute opacity-0 ${
               showControls && "opacity-100"
@@ -204,16 +219,31 @@ const Profile = () => {
           {showComments && (
             <div className="all-comments">
               {blog.comments && blog.comments.length > 0 ? (
-                blog.comments.map((ele) => {
-                  return (
-                    <Comment
-                      modify={true}
-                      key={ele.commentId}
-                      {...ele}
-                      postId={blog._id}
-                    />
-                  );
-                })
+                <>
+                  {/* Separate pinned comments from non-pinned comments */}
+                  {blog.comments
+                    .filter((comment) => comment.pinned)
+                    .map((ele) => (
+                      <Comment
+                        modify={true}
+                        key={ele._id}
+                        {...ele}
+                        postId={blog._id}
+                        author={user._id === ele.userId ? "true" : "false"}
+                      />
+                    ))}
+                  {blog.comments
+                    .filter((comment) => !comment.pinned)
+                    .map((ele) => (
+                      <Comment
+                        modify={true}
+                        key={ele._id}
+                        {...ele}
+                        postId={blog._id}
+                        author={user._id === ele.userId ? "true" : "false"}
+                      />
+                    ))}
+                </>
               ) : (
                 <span className="no-comments dark:text-gray-100">
                   No Comments

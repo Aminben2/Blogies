@@ -43,12 +43,13 @@ const changePrivacy = async (req, res) => {
 };
 
 const deleteComment = async (req, res) => {
-  const { postId, commentId } = req.body;
+  const { postId } = req.body;
+  const { id } = req.params;
 
   const post = await Blogs.findByIdAndUpdate(
     { _id: postId },
     {
-      $pull: { comments: { commentId: commentId } },
+      $pull: { comments: { _id: id } },
     }
   );
 
@@ -56,10 +57,44 @@ const deleteComment = async (req, res) => {
 
   res.status(200).json(post);
 };
+const pinComment = async (req, res) => {
+  const { postId } = req.body;
+  const { id } = req.params;
 
+  if (!mongoose.Types.ObjectId.isValid(postId))
+    return res.status(501).json({ error: "Blog id is not valid !" });
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(501).json({ error: "Comment id is not valid !" });
+
+  const existingComment = await Blogs.findOne(
+    { _id: postId, "comments._id": id },
+    { "comments.$": 1 }
+  );
+  if (!existingComment)
+    return res.status(400).json({ error: "Comment not found" });
+
+  if (existingComment && existingComment.comments.length > 0) {
+    const currentPinnedValue = existingComment.comments[0].pinned;
+
+    // Perform the update
+    const blog = await Blogs.findOneAndUpdate(
+      { _id: postId, "comments._id": id }, // Match the blog and the comment
+      { $set: { "comments.$.pinned": !currentPinnedValue } }, // Toggle the value of pinned
+      { new: true }
+    );
+    if (!blog) return res.status(400).json({ error: "Blog not found" });
+    return res.status(200).json(blog);
+  }
+};
+
+const apreciateComment = () => {
+  
+}
+  
 module.exports = {
   deleteComment,
   changePrivacy,
   deleteUserBlog,
   getUserPost,
+  pinComment,
 };

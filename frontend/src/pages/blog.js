@@ -1,4 +1,3 @@
-import { nanoid } from "@reduxjs/toolkit";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
@@ -22,9 +21,28 @@ export const Blog = () => {
 
   let postComments = null;
   if (onePost && onePost.comments && onePost.comments.length > 0) {
-    postComments = onePost.comments.map((ele) => {
-      return <Comment key={ele.commentId} {...ele} />;
-    });
+    const pinnedComments = onePost.comments.filter((comment) => comment.pinned);
+    const nonPinnedComments = onePost.comments.filter(
+      (comment) => !comment.pinned
+    );
+    postComments = [
+      // Render pinned comments at the top
+      ...pinnedComments.map((ele) => (
+        <Comment
+          key={ele._id}
+          {...ele}
+          author={user._id === ele.userId ? "true" : "false"}
+        />
+      )),
+      // Render non-pinned comments after pinned comments
+      ...nonPinnedComments.map((ele) => (
+        <Comment
+          key={ele._id}
+          {...ele}
+          author={user._id === ele.userId ? "true" : "false"}
+        />
+      )),
+    ];
   }
 
   const handleChange = (e) => {
@@ -32,19 +50,16 @@ export const Blog = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!user) {
       setError("You must be loged in");
       return;
     }
-
     const commentObject = {
-      commentId: nanoid(),
       comment,
       userId: user._id,
     };
 
-    const response = await fetch(`/api/blogs/${id}`, {
+    const response = await fetch(`http://localhost:4000/api/blogs/${id}`, {
       method: "PATCH",
       body: JSON.stringify(commentObject),
       headers: {

@@ -113,8 +113,21 @@ const postSlice = createSlice({
       const wantedPost = state.userPosts.find((post) => post._id === postId);
       if (wantedPost) {
         wantedPost.comments = wantedPost.comments.filter(
-          (e) => e.commentId !== commentId
+          (e) => e._id !== commentId
         );
+      }
+    },
+    pinCom(state, action) {
+      const { postId, commentId } = action.payload;
+      const existingPost = state.userPosts.find((post) => post._id === postId);
+      if (existingPost) {
+        const existingCommentIndex = existingPost.comments.findIndex(
+          (comment) => comment._id === commentId
+        );
+        if (existingCommentIndex !== -1) {
+          existingPost.comments[existingCommentIndex].pinned =
+            !existingPost.comments[existingCommentIndex].pinned;
+        }
       }
     },
   },
@@ -160,5 +173,6 @@ export const {
   deleteUserPost,
   changePrivacy,
   delComment,
+  pinCom,
 } = postSlice.actions;
 export default postSlice;
