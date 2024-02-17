@@ -1,41 +1,77 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../store/postsSlice";
-import { nanoid } from "@reduxjs/toolkit";
 import { useNavigate } from "react-router-dom";
+import { getCategories } from "../store/categorySlice";
 
 function AddPostFrom() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth);
+  const { categories, isCategoriesLoading } = useSelector(
+    (state) => state.categories
+  );
+  useEffect(() => {
+    dispatch(getCategories());
+  }, [dispatch]);
   const navigate = useNavigate();
   let [postInfo, setPostInfo] = React.useState({
     title: "",
     content: "",
     category: "",
     tags: "",
+    image: "",
   });
   const [error, setError] = useState("");
 
   function handleChange(e) {
     let { value, name } = e.target;
     setPostInfo((preInfo) => {
-      return {
-        ...preInfo,
-        [name]: value,
-      };
+      if (name === "image") {
+        const { files } = e.target;
+        return {
+          ...preInfo,
+          [name]: files[0],
+        };
+      } else {
+        return {
+          ...preInfo,
+          [name]: value,
+        };
+      }
     });
   }
-  console.log(postInfo);
-  const canAddPost =
-    Boolean(postInfo.title) &&
-    Boolean(postInfo.content) &&
-    Boolean(postInfo.category) &&
-    Boolean(postInfo.tags);
+  const canAddPost = Boolean(postInfo.title) && Boolean(postInfo.content);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!user) {
       setError("You must be Loged in");
+      return;
+    }
+
+    const uploadImage = async () => {
+      console.log(postInfo.image);
+      const formData = new FormData();
+      formData.append("files", postInfo.image); // Assuming the file input is named 'image'
+
+      try {
+        const response = await fetch("http://localhost:4000/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await response.json();
+        console.log(data);
+        return data.url; // Assuming the response from the server contains the URL of the uploaded image
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        return null;
+      }
+    };
+
+    // Upload image and get its URL
+    const imagesUrl = await uploadImage();
+    if (!imagesUrl) {
+      setError("Error uploading image");
       return;
     }
 
@@ -51,9 +87,10 @@ function AddPostFrom() {
         love: 0,
         care: 0,
       },
-      img: "./imgs/blog-2.jpg",
+      image: imagesUrl, // Set the image URL in the blog object
       comments: [],
     };
+
     // {"_id":"65a2b23ba16608ac54bf9380","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWEyYjIzYmExNjYwOGFjNTRiZjkzODAiLCJpYXQiOjE3MDc5MjE3MTksImV4cCI6MTcwODE4MDkxOX0.5wTjOeOkIsy-zstV0H2JmNH7Jp9YJ9Dy6as1s1Cjngw"}
     const response = await fetch("http://localhost:4000/api/blogs/", {
       method: "POST",
@@ -69,12 +106,7 @@ function AddPostFrom() {
     }
     if (response.ok) {
       setError("");
-      dispatch(
-        addPost({
-          ...blog,
-          _id: nanoid(),
-        })
-      );
+      dispatch(addPost(blog));
       navigate("/blogs");
     }
 
@@ -84,9 +116,16 @@ function AddPostFrom() {
       userId: "",
       category: "",
       tags: "",
+      image: "",
     });
   };
-
+  let categoriesOptions;
+  if (!isCategoriesLoading)
+    categoriesOptions = categories.map((cate) => (
+      <option key={cate._id} value={cate.name}>
+        {cate.name}
+      </option>
+    ));
   return (
     <div className="flex items-center justify-center p-12 dark:bg-gray-800">
       <div className="mx-auto w-full max-w-[550px] flex flex-col gap-y-10">
@@ -114,13 +153,14 @@ function AddPostFrom() {
           <div className="mb-5">
             <label
               className="mb-3 block text-base font-medium text-[#07074D] dark:text-sky-500"
-              htmlFor="img"
+              htmlFor="image"
             >
               Picture
             </label>
             <input
+              onChange={handleChange}
               type="file"
-              name="img"
+              name="image"
               className="w-full text-base dark:text-gray-200 dark:bg-gray-600 bg-gray-100 py-2 px-6 rounded-md
       file:mr-4 file:py-2 file:px-4
       file:rounded-full file:border-0
@@ -178,8 +218,7 @@ function AddPostFrom() {
               value={postInfo.category}
               onChange={handleChange}
             >
-              <option value="sport">sport</option>
-              <option value="travel">Travel</option>
+              {categoriesOptions}
             </select>
           </div>
 

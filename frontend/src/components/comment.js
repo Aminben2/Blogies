@@ -135,7 +135,9 @@ export const Comment = (props) => {
                     <img
                       src="/imgs/loved.png"
                       alt="loved"
-                      className="w-5 ms-2"
+                      className={`w-5 ms-2 opacity-0 isLoved ${
+                        props.isLoved && "opacity-100"
+                      } `}
                     />
                   </div>
                 )}

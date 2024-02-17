@@ -232,7 +232,7 @@ body::-webkit-scrollbar {
   box-shadow: none;
 }
 
-.blog-controls,.update-controls{
+.blog-controls,.update-controls,.isLoved{
   transition: 300ms;
   backdrop-filter: blur(10px);
 }

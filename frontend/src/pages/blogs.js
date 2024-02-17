@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import AuthorPost from "../components/authorPost";
 import PostLoaders from "../components/postLoaders";
 import ReactionBar from "../components/reactionBar";
@@ -17,16 +17,18 @@ const Blogs = () => {
     .map((ele) => {
       return (
         <section
-          className="post border border-green-500 dark:border-green-400"
+          className="post border w-full border-green-500 dark:border-green-400"
           key={ele._id}
         >
-          <Link to={ele._id.toString()}>
-            <img
-              src={ele.img}
-              className="post-img transition-transform hover:scale-105 duration-200"
-              alt="pic"
-            />
-          </Link>
+          <div className="w-full">
+            <Link to={ele._id.toString()}>
+              <img
+                src={"http://localhost:4000/uploads/" + ele.image[0]}
+                className="post-img transition-transform hover:scale-105 duration-200 w-full"
+                alt="pic"
+              />
+            </Link>
+          </div>
           <h1 className="post-title text-green-500 dark:text-green-400 text-xl">
             {ele.title}
           </h1>
@@ -72,12 +74,15 @@ const Blogs = () => {
       {isLoading ? (
         <PostLoaders />
       ) : postsElements.length > 0 ? (
-        <div className="Posts-list">{postsElements}</div>
+        <div className="Posts-list w-full h-auto">{postsElements}</div>
       ) : (
-        <div className="flex h-full justify-center items-center">
+        <div className="flex flex-col gap-5 justify-center items-center h-screen">
           <span className="text-3xl text-green-500">
             There's no blogs wait for updates :)
           </span>
+          <button className="p-3 px-4 border-0 dark:bg-green-500 dark:text-gray-100 rounded-lg dark:hover:bg-green-700 duration-300 shadow-lg text-xl">
+            <NavLink to="/addBlog"> Share Your Thoutghs</NavLink>
+          </button>
         </div>
       )}
     </div>

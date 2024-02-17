@@ -5,6 +5,7 @@ import AuthorPost from "../components/authorPost";
 import { Comment } from "../components/comment";
 import OnePostLoader from "../components/onePostLoader";
 import { addComment, getOnePost } from "../store/postsSlice";
+import ImageLoader from "../components/ImageLoader";
 
 export const Blog = () => {
   const user = useSelector((state) => state.auth);
@@ -82,6 +83,7 @@ export const Blog = () => {
     }
     setComment("");
   };
+  console.log(onePost);
   return (
     <>
       {isLoadigOnePost ? (
@@ -91,7 +93,16 @@ export const Blog = () => {
           <Link className="go-back " to={"/blogs"}>
             &lt; See Other Blogs
           </Link>
-          <img src={`.${onePost.img}`} className="post-img" alt="pic" />
+
+          {onePost.image === undefined ? (
+            <ImageLoader />
+          ) : (
+            <img
+              src={"http://localhost:4000/uploads/" + onePost.image[0]}
+              className="post-img"
+              alt="pic"
+            />
+          )}
           <h1 className="post-title text-xl text-green-500 dark:text-green-400">
             {onePost.title}
           </h1>

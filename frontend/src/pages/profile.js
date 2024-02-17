@@ -107,6 +107,7 @@ const Profile = () => {
       // update the state
       dispatch(toggleCmnts({ id }));
       setShowControls(false);
+      json ? setShowCmnt(true) : setShowCmnt(false);
     } else {
       console.log(json.error);
     }
@@ -211,7 +212,11 @@ const Profile = () => {
             </li>
           </ul>
         </div>
-        <img src={`.${blog.img}`} className="post-img shadow" alt="pic" />
+        <img
+          src={"http://localhost:4000/uploads/" + blog.image}
+          className="post-img shadow"
+          alt="pic"
+        />
         <h1 className="post-title text-xl text-green-500 dark:text-green-400">
           {blog.title}
         </h1>
@@ -285,6 +290,7 @@ const Profile = () => {
                         {...ele}
                         postId={blog._id}
                         author={user._id === ele.userId ? "true" : "false"}
+                        isLoved={blog.ifCommentsEnabaled}
                       />
                     ))}
                   {blog.comments
@@ -296,6 +302,7 @@ const Profile = () => {
                         {...ele}
                         postId={blog._id}
                         author={user._id === ele.userId ? "true" : "false"}
+                        isLoved={blog.ifCommentsEnabaled}
                       />
                     ))}
                 </>

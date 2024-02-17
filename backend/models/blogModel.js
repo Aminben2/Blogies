@@ -38,9 +38,9 @@ const blogSchema = new Schema(
       type: Object,
       required: true,
     },
-    img: {
-      type: String,
-      required: false,
+    image: {
+      type: [String],
+      required: true,
     },
     ifCommentsEnabaled: {
       type: Boolean,
