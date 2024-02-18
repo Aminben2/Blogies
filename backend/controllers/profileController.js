@@ -137,7 +137,22 @@ const toggleComments = async (req, res) => {
   }
   res.status(200).json(toggledValue);
 };
+const editBlog = async (req, res) => {
+  const { id } = req.params;
+  const { image, title, content, tags } = req.body;
 
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(500).json({ error: "Blog id is not valid " });
+  const blog = await Blogs.findByIdAndUpdate(
+    { _id: id },
+    { $set: { image, title, content, tags } },
+    { new: true }
+  );
+
+  if (!blog) return res.status(404).json({ error: "Blog not found" });
+
+  res.status(200).json(blog);
+};
 module.exports = {
   deleteComment,
   changePrivacy,
@@ -146,4 +161,5 @@ module.exports = {
   pinComment,
   apreciateComment,
   toggleComments,
+  editBlog,
 };

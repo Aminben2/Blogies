@@ -23,7 +23,7 @@ function AddPostFrom() {
   });
   const [error, setError] = useState("");
 
-  function handleChange(e) {
+  const handleChange = (e) => {
     let { value, name } = e.target;
     setPostInfo((preInfo) => {
       if (name === "image") {
@@ -39,7 +39,7 @@ function AddPostFrom() {
         };
       }
     });
-  }
+  };
   const canAddPost = Boolean(postInfo.title) && Boolean(postInfo.content);
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -106,7 +106,7 @@ function AddPostFrom() {
     }
     if (response.ok) {
       setError("");
-      dispatch(addPost(blog));
+      dispatch(addPost(json));
       navigate("/blogs");
     }
 
@@ -126,6 +126,7 @@ function AddPostFrom() {
         {cate.name}
       </option>
     ));
+
   return (
     <div className="flex items-center justify-center p-12 dark:bg-gray-800">
       <div className="mx-auto w-full max-w-[550px] flex flex-col gap-y-10">

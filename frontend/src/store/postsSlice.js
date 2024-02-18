@@ -150,6 +150,15 @@ const postSlice = createSlice({
         existingPost.ifCommentsEnabaled = !existingPost.ifCommentsEnabaled;
       }
     },
+    editBlog(state, action) {
+      const updatedBlog = action.payload;
+      const index = state.userPosts.findIndex(
+        (blog) => blog._id === updatedBlog._id
+      );
+      if (index !== -1) {
+        state.userPosts[index] = updatedBlog;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -196,5 +205,6 @@ export const {
   pinCom,
   toggleCmnts,
   apreCom,
+  editBlog,
 } = postSlice.actions;
 export default postSlice;

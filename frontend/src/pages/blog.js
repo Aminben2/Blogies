@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import AuthorPost from "../components/authorPost";
 import { Comment } from "../components/comment";
 import OnePostLoader from "../components/onePostLoader";
@@ -83,7 +83,6 @@ export const Blog = () => {
     }
     setComment("");
   };
-  console.log(onePost);
   return (
     <>
       {isLoadigOnePost ? (
@@ -110,7 +109,9 @@ export const Blog = () => {
             {onePost.content}
           </p>
           <div className="author">
-            <AuthorPost userId={onePost.userId} />
+            <NavLink to={"profile/" + onePost.userId}>
+              <AuthorPost userId={onePost.userId} />
+            </NavLink>
             {/* <ReactionBar post={onePost} /> */}
           </div>
           <div className="comments dark:bg-gray-600">

@@ -8,6 +8,7 @@ const {
   pinComment,
   apreciateComment,
   toggleComments,
+  editBlog,
 } = require("../controllers/profileController");
 const requireAuth = require("../middleware/requireAuth");
 
@@ -24,6 +25,8 @@ router.patch("/:id/pinComment", pinComment);
 router.patch("/:id/apreciateComment", apreciateComment);
 
 router.patch("/:id/toggleComments", toggleComments);
+
+router.patch("/:id/editBlog", editBlog);
 
 router.delete("/:id", deleteUserBlog);
 

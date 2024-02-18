@@ -10,6 +10,7 @@ import { Comment } from "../components/comment";
 import { formatDistanceToNow } from "date-fns";
 import { NavLink } from "react-router-dom";
 import WarningModal from "../components/WaeningModal";
+import UpdatePostForm from "../components/UpdatePostForm";
 
 const Profile = () => {
   const user = useSelector((state) => state.auth);
@@ -20,6 +21,7 @@ const Profile = () => {
   const [showControls, setShowControls] = useState(false);
   const [showConfimrModel, setShowConfirmModel] = useState(false);
   const [privacyUpdate, setPrivacyUpdate] = useState(false);
+  const [showEditBlogForm, setShowEditBlogForm] = useState(false);
 
   const dispatch = useDispatch();
   const menuRef = useRef(null);
@@ -123,13 +125,30 @@ const Profile = () => {
     setShowConfirmModel(false);
   };
 
+  const showPopUp = () => {
+    setShowEditBlogForm(true);
+    document.body.classList.add("overflow-hidden");
+  };
+
   const blogs = posts.map((blog) => {
     return (
-      <section key={blog._id} className="post one dark:bg-gray-800 relative">
+      <section key={blog._id} className="post one dark:bg-gray-800">
+        {showEditBlogForm && (
+          <div
+            className="fixed top-0 left-0 w-full h-full backdrop-blur confirm-dialog z-50 "
+          ></div>
+        )}
         {showConfimrModel && blog._id === activeBlog && (
           <WarningModal
             confirm={() => deleteBlog(blog._id)}
             cancel={cancelDelete}
+          />
+        )}
+        {showEditBlogForm && (
+          <UpdatePostForm
+            fun={setShowEditBlogForm}
+            handleEdit={editBlog}
+            {...blog}
           />
         )}
         <div className="relative flex justify-between items-center">
@@ -163,7 +182,7 @@ const Profile = () => {
             </li>
             <li
               className="cursor-pointer font-medium text-xs"
-              onClick={editBlog}
+              onClick={showPopUp}
             >
               Edit blog
             </li>
@@ -340,7 +359,7 @@ const Profile = () => {
           <div className="border-2 border-gray-200">{blogs}</div>
         </div>
       ) : (
-        <div className="flex gap-y-5 flex-col justify-center items-center h-full">
+        <div className="flex gap-y-5 flex-col justify-center items-center h-screen">
           <span className="text-green-500 font-bold text-2xl ">
             You have no blogs, Add some ?
           </span>
