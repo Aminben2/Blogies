@@ -6,6 +6,7 @@ import PostLoaders from "../components/postLoaders";
 import ReactionBar from "../components/reactionBar";
 import { getPosts } from "../store/postsSlice";
 import { formatDistanceToNow } from "date-fns";
+import Bar from "../components/Bar";
 
 const Blogs = () => {
   const dispatch = useDispatch();
@@ -37,7 +38,7 @@ const Blogs = () => {
           </p>
           <div className="author">
             <AuthorPost userId={ele.userId} />
-            <ReactionBar post={ele} />
+            <Bar {...ele} />
           </div>
           <Link to={ele._id.toString()}>
             <div className="comments flex flex-row dark:bg-gray-600 ">

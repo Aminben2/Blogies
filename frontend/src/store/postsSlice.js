@@ -109,6 +109,13 @@ const postSlice = createSlice({
         existingPost.reactions[reaction]++;
       }
     },
+    removeReaction(state, action) {
+      let { postId, reaction } = action.payload;
+      let existingPost = state.posts.find((post) => post._id === postId);
+      if (existingPost) {
+        existingPost.reactions[reaction]--;
+      }
+    },
     addComment(state, action) {
       const { commentContent, userId } = action.payload;
       state.onePost.comments.push({
@@ -239,5 +246,6 @@ export const {
   toggleCmnts,
   apreCom,
   editBlog,
+  removeReaction,
 } = postSlice.actions;
 export default postSlice;

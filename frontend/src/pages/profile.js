@@ -132,9 +132,9 @@ const Profile = () => {
 
   const blogs = posts.map((blog) => {
     return (
-      <section key={blog._id} className="post one dark:bg-gray-800">
+      <section key={blog._id} className="post one dark:bg-gray-800 relative">
         {showEditBlogForm && (
-          <div className="fixed top-0 left-0 w-full h-full backdrop-blur confirm-dialog z-50 "></div>
+          <div className="fixed top-0 left-0 w-full h-full backdrop-blur z-50 "></div>
         )}
         {showConfimrModel && blog._id === activeBlog && (
           <WarningModal

@@ -44,6 +44,9 @@ body::-webkit-scrollbar {
   padding: 20px;
   animation :fade 500ms;
 }
+.editForm{
+  width: 600px;
+}
 @keyframes fade {
   0%{
     opacity: 0;

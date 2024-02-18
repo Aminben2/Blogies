@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import AuthorPost from "../components/authorPost";
 import { Comment } from "../components/comment";
 import OnePostLoader from "../components/onePostLoader";

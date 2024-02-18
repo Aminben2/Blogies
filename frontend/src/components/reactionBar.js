@@ -27,7 +27,7 @@ const ReactionBar = ({ post }) => {
 
     const json = await response.json();
     if (response.ok) {
-      return json;
+      dispatch(addReaction(reactObj));
     } else {
       console.log(json.error);
     }
@@ -38,11 +38,7 @@ const ReactionBar = ({ post }) => {
       <button
         className="react dark:text-gray-100 dark:active:bg-gray-500"
         key={ele.name}
-        onClick={() => {
-          const re = react({ postId: post._id, reaction: ele.name });
-          if (re)
-            dispatch(addReaction({ postId: post._id, reaction: ele.name }));
-        }}
+        onClick={() => react({ postId: post._id, reaction: ele.name })}
       >
         {ele.emoji}
         {post.reactions[ele.name]}

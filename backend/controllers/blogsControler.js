@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongodb");
 const Blogs = require("../models/blogModel");
 const mongoose = require("mongoose");
 
@@ -59,15 +60,34 @@ const addComment = async (req, res) => {
 };
 
 const addReaction = async (req, res) => {
-  const { postId, reaction } = req.body;
-
+  const { reaction } = req.body;
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(500).json({ error: "Blog id is not valid " });
+  }
   const blog = await Blogs.findByIdAndUpdate(
-    { _id: postId },
+    { _id: id },
     { $inc: { [`reactions.${reaction}`]: 1 } }
   );
 
   if (!blog)
     return res.status(500).json({ error: "Could Not increment the reaction" });
+  res.status(200).json(blog);
+};
+const removeReaction = async (req, res) => {
+  const { reaction } = req.body;
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(500).json({ error: "Blog id is not valid " });
+  }
+  const decrementValue = -1;
+  const blog = await Blogs.findByIdAndUpdate(
+    { _id: id },
+    { $inc: { [`reactions.${reaction}`]: decrementValue } }
+  );
+
+  if (!blog)
+    return res.status(500).json({ error: "Could Not decrement the reaction" });
   res.status(200).json(blog);
 };
 
@@ -77,4 +97,5 @@ module.exports = {
   AddBlog,
   addComment,
   addReaction,
+  removeReaction,
 };
