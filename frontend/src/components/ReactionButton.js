@@ -1,6 +1,6 @@
 import ReactionIcon from "./ReactionIcon";
 
-const ReactionButton = ({ icon, onClick, selected, isLiked, num }) => {
+const ReactionButton = ({ icon, onClick, isLiked }) => {
   return (
     <button
       className={`flex items-center space-x-1 px-2 py-1 rounded-lg transition-colors duration-200 ${
@@ -8,7 +8,7 @@ const ReactionButton = ({ icon, onClick, selected, isLiked, num }) => {
       }`}
       onClick={onClick}
     >
-      <span>{num}</span>
+      {/* <span>{num}</span> */}
 
       <ReactionIcon name={icon} />
     </button>

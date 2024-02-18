@@ -50,7 +50,6 @@ function AddPostFrom() {
     }
 
     const uploadImage = async () => {
-      console.log(postInfo.image);
       const formData = new FormData();
       formData.append("files", postInfo.image); // Assuming the file input is named 'image'
 
@@ -60,7 +59,6 @@ function AddPostFrom() {
           body: formData,
         });
         const data = await response.json();
-        console.log(data);
         return data.url; // Assuming the response from the server contains the URL of the uploaded image
       } catch (error) {
         console.error("Error uploading image:", error);
@@ -81,12 +79,7 @@ function AddPostFrom() {
       userId: user._id,
       category: postInfo.category,
       tags: postInfo.tags,
-      reactions: {
-        like: 0,
-        wow: 0,
-        love: 0,
-        care: 0,
-      },
+      reactions: [],
       image: imagesUrl, // Set the image URL in the blog object
       comments: [],
     };

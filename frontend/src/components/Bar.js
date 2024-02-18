@@ -8,12 +8,14 @@ const Bar = ({ _id, reactions }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth);
   const [selectedReaction, setSelectedReaction] = useState(null);
-  const likedPosts = useSelector((state) => state.likedPosts);
-  const [isLiked, setIsLiked] = useState();
-  const [preReaction, setPreReaction] = useState({});
+  const [userReaction, setUserReaction] = useState();
+  const [preReaction, setPreReaction] = useState(null);
+
   useEffect(() => {
-    setIsLiked(likedPosts.includes(_id));
-  }, [_id, likedPosts]);
+    const rc = reactions.find((react) => react.userId === user._id);
+    setUserReaction(rc.reaction);
+  }, [_id, user._id, reactions]);
+
   const react = async (reactObj) => {
     if (!user) {
       return;
@@ -38,6 +40,7 @@ const Bar = ({ _id, reactions }) => {
       console.log(json.error);
     }
   };
+
   const unReact = async (reactObj) => {
     if (!user) {
       return;
@@ -62,58 +65,72 @@ const Bar = ({ _id, reactions }) => {
       console.log(json.error);
     }
   };
+
   const handleReactionClick = async (reaction) => {
     if (selectedReaction === reaction) {
       // If the same reaction is clicked again, deselect it
-      const isDone = await unReact({ postId: _id, reaction: reaction });
+      const isDone = await unReact({ userId: user._id, reaction: reaction });
       if (isDone) {
         setSelectedReaction(null);
-        setIsLiked(false);
+        setUserReaction(reaction);
         dispatch(removeLikedPost(_id));
       }
     } else {
       // Otherwise, select the clicked reaction
       if (preReaction) {
-        await unReact(preReaction);
-      }
-      const isDone = await react({ postId: _id, reaction: reaction });
-      if (isDone) {
-        setSelectedReaction(reaction);
-        setIsLiked(true);
-        dispatch(addLikedPost(_id));
+        // If a previous reaction exists, undo it
+        const isDoneUndo = await unReact(preReaction);
+        if (isDoneUndo) {
+          // After undoing the previous reaction, add the new one
+          const isDoneAdd = await react({
+            userId: user._id,
+            reaction: reaction,
+          });
+          if (isDoneAdd) {
+            setSelectedReaction(reaction);
+            setUserReaction(reaction);
+            dispatch(addLikedPost(_id));
+          }
+        }
+      } else {
+        // If no previous reaction exists, simply add the new reaction
+        const isDone = await react({ userId: user._id, reaction: reaction });
+        if (isDone) {
+          setSelectedReaction(reaction);
+          setUserReaction(reaction);
+          dispatch(addLikedPost(_id));
+        }
       }
     }
-    setPreReaction({ postId: _id, reaction: reaction });
+    // Set the previous reaction for future undo operation
+    setPreReaction({ userId: user._id, reaction: reaction });
   };
+
   return (
     <div className="flex items-center space-x-4">
       <ReactionButton
         icon="like"
         onClick={() => handleReactionClick("like")}
         selected={selectedReaction === "like"}
-        isLiked={isLiked}
-        num={reactions.like}
+        isLiked={userReaction === "like"}
       />
       <ReactionButton
         icon="love"
         onClick={() => handleReactionClick("love")}
         selected={selectedReaction === "love"}
-        isLiked={isLiked}
-        num={reactions.love}
+        isLiked={userReaction === "love"}
       />
       <ReactionButton
         icon="care"
         onClick={() => handleReactionClick("care")}
         selected={selectedReaction === "care"}
-        isLiked={isLiked}
-        num={reactions.care}
+        isLiked={userReaction === "care"}
       />
       <ReactionButton
         icon="wow"
         onClick={() => handleReactionClick("wow")}
         selected={selectedReaction === "wow"}
-        isLiked={isLiked}
-        num={reactions.wow}
+        isLiked={userReaction === "wow"}
       />
     </div>
   );
