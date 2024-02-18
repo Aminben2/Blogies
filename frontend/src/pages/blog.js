@@ -109,10 +109,7 @@ export const Blog = () => {
             {onePost.content}
           </p>
           <div className="author">
-            <NavLink to={"profile/" + onePost.userId}>
-              <AuthorPost userId={onePost.userId} />
-            </NavLink>
-            {/* <ReactionBar post={onePost} /> */}
+            <AuthorPost userId={onePost.userId} />
           </div>
           <div className="comments dark:bg-gray-600">
             <p className="dark:text-gray-100">

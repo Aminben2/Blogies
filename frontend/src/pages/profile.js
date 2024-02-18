@@ -40,8 +40,8 @@ const Profile = () => {
     };
   }, []);
   useEffect(() => {
-    dispatch(getUserPosts());
-  }, [dispatch]);
+    dispatch(getUserPosts(user._id));
+  }, [dispatch, user._id]);
   const updatePrivacy = async (obj) => {
     const response = await fetch(
       `http://localhost:4000/api/profile/${obj.postId}/privacy`,
@@ -134,9 +134,7 @@ const Profile = () => {
     return (
       <section key={blog._id} className="post one dark:bg-gray-800">
         {showEditBlogForm && (
-          <div
-            className="fixed top-0 left-0 w-full h-full backdrop-blur confirm-dialog z-50 "
-          ></div>
+          <div className="fixed top-0 left-0 w-full h-full backdrop-blur confirm-dialog z-50 "></div>
         )}
         {showConfimrModel && blog._id === activeBlog && (
           <WarningModal
