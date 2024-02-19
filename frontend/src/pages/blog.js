@@ -119,8 +119,8 @@ export const Blog = () => {
               {postComments && postComments.length > 0 ? (
                 postComments
               ) : (
-                <span className="no-comments dark:text-gray-100">
-                  No Comments
+                <span className="no-comments dark:text-gray-100 block text-center p-5">
+                  No comments
                 </span>
               )}
             </div>
@@ -129,11 +129,12 @@ export const Blog = () => {
                 <input
                   type="text"
                   name="comment"
-                  placeholder="Leave Your Comment"
+                  placeholder="Leave your comment"
                   onChange={handleChange}
                   value={comment}
                   required
-                  className="dark:bg-gray-500 placeholder:text-gray-300 dark:text-gray-100"
+                  className="dark:bg-gray-500 border-0 outline outline-green-500 outline-0 
+                  hover:outline-2 focus:outline-2 placeholder:text-gray-300 dark:text-gray-100"
                 />
                 <button type="submit">Comment</button>
                 {error && <span className="err">{error}</span>}

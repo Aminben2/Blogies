@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import AuthorPost from "../components/authorPost";
@@ -11,6 +11,7 @@ const Blogs = () => {
   const dispatch = useDispatch();
   const { posts, isLoading } = useSelector((state) => state.posts);
   const isDarkMode = useSelector((state) => state.theme);
+  const [revealed, setRevealed] = useState(false);
 
   let postsElements = posts
     .filter((ele) => !ele.private)
@@ -29,31 +30,49 @@ const Blogs = () => {
               />
             </Link>
           </div>
-          <h1 className="post-title text-green-500 dark:text-green-400 text-xl">
+          <h1 className="post-title text-green-500 dark:text-green-400 text-xl first-letter:capitalize">
             {ele.title}
           </h1>
-          <p className="post-content font-bold dark:text-gray-100">
+          <p className="post-content font-bold dark:text-gray-100 first-letter:capitalize">
             {ele.content}
           </p>
           <div className="author">
             <AuthorPost userId={ele.userId} />
-            <Bar {...ele} />
           </div>
-          <Link to={ele._id.toString()}>
-            <div className="comments flex flex-row dark:bg-gray-600 ">
-              <p className="dark:text-gray-100">
-                {ele.comments ? ele.comments.length : "0"} Comments
-              </p>
-              <img
-                src={
-                  isDarkMode
-                    ? "./imgs/commenter-light.png"
-                    : "./imgs/commenter.png"
-                }
-                alt=""
-              />
-            </div>
-          </Link>
+          <div className="relative comments flex flex-row justify-center items-center dark:bg-gray-600 ">
+            {revealed && <Bar show={revealed} {...ele} />}
+
+            <button
+              className="flex justify-center items-center gap-1 font-bold dark:text-gray-100"
+              onClick={() => setRevealed((pre) => !pre)}
+            >
+              <lord-icon
+                src="https://cdn.lordicon.com/xyboiuok.json"
+                trigger="hover"
+                colors={isDarkMode ? "primary:#ffffff" : ""}
+                style={{ width: "30px", height: "30px" }}
+              ></lord-icon>
+              <span>React</span>
+            </button>
+
+            <NavLink
+              to={ele._id.toString()}
+              className="flex items-center justify-center gap-1"
+            >
+              <span className="dark:text-gray-100 font-bold">Comment</span>
+              <lord-icon
+                src="https://cdn.lordicon.com/fdxqrdfe.json"
+                trigger="hover"
+                colors={isDarkMode && "primary:#ffffff"}
+                style={{ width: "30px", height: "30px" }}
+              ></lord-icon>
+            </NavLink>
+          </div>
+          <NavLink to={ele._id}>
+            <p className="dark:text-gray-100 font-thin text-sm px-1">
+              See all {ele.comments ? ele.comments.length : "0"} Comments
+            </p>
+          </NavLink>
           <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-300">
             {ele.createdAt
               ? formatDistanceToNow(new Date(ele.createdAt), {

@@ -3,8 +3,11 @@ import ReactionIcon from "./ReactionIcon";
 const ReactionButton = ({ icon, onClick, isLiked }) => {
   return (
     <button
-      className={`flex items-center space-x-1 px-2 py-1 rounded-lg transition-colors duration-200 ${
-        isLiked ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"
+      title={icon}
+      className={`flex items-center space-x-1 p-1 rounded-lg transition-colors duration-400 ${
+        isLiked
+          ? "dark:bg-green-400 bg-green-500 text-white shadow-lg"
+          : "dark:bg-gray-500 bg-gray-200 text-gray-600"
       }`}
       onClick={onClick}
     >

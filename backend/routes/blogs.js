@@ -8,12 +8,15 @@ const {
   addComment,
   addReaction,
   removeReaction,
+  getReactions,
 } = require("../controllers/blogsControler");
 const requireAuth = require("../middleware/requireAuth");
 
 router.use(requireAuth);
 
 router.get("/:id", getOneBlog);
+
+router.get("/:id/reactions", getReactions);
 
 router.post("/", AddBlog);
 

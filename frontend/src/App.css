@@ -40,7 +40,7 @@ body::-webkit-scrollbar {
 .post {
   display: flex;
   flex-direction: column;
-  row-gap: 10px;
+  row-gap: 7px;
   padding: 20px;
   animation :fade 500ms;
 }
@@ -50,8 +50,15 @@ body::-webkit-scrollbar {
 @keyframes fade {
   0%{
     opacity: 0;
-  }40%{
+  }
+  25%{
+    opacity: 0.25;
+  }
+  50%{
     opacity:  0.5;
+  }
+  75%{
+    opacity: 0.75;
   }100%{
     opacity:1;
     }
@@ -64,7 +71,6 @@ body::-webkit-scrollbar {
   width: 800px;
   margin: 0 auto;
   background-color: #ffff;
-  row-gap: 20px;
 }
 .one .comment-form {
   position: sticky;
@@ -141,8 +147,6 @@ body::-webkit-scrollbar {
 .comment-form input {
   margin-right: 5px;
   padding: 10px;
-  border: 1px solid blueviolet;
-  border-radius: 5px;
   width: 350px;
 }
 
@@ -155,9 +159,7 @@ body::-webkit-scrollbar {
 .go-back:hover {
   text-decoration: underline;
 }
-.comment-form input:focus {
-  outline: 1px solid blueviolet;
-}
+
 .comment-form button {
   border: 1px solid cadetblue;
   padding: 10px;
@@ -172,8 +174,8 @@ body::-webkit-scrollbar {
 
 .no-comments {
   color: rgb(78, 1, 150);
-  width: 100%;
   text-align: center;
+
 }
 
 /* darke mode toggle button */
@@ -235,8 +237,8 @@ body::-webkit-scrollbar {
   box-shadow: none;
 }
 
-.blog-controls,.update-controls,.isLoved{
-  transition: 300ms;
+.blog-controls,.update-controls,.isLoved,.reactBar{
+  transition: 500ms;
   backdrop-filter: blur(10px);
 }
 

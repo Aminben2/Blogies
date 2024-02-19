@@ -111,47 +111,23 @@ const removeReaction = async (req, res) => {
   if (!blog) {
     return res.status(404).json({ error: "Blog not found /failed to update" });
   }
-  // Remove the user's reaction
-  // blog.reactions = blog.reactions.filter(
-  //   (react) => react.userId.toString() !== userId
-  // );
-
-  // await blog.save();
 
   res.status(200).json(blog);
 };
 
-// const addReaction = async (req, res) => {
-//   const { reaction } = req.body;
-//   const { id } = req.params;
-//   if (!mongoose.Types.ObjectId.isValid(id)) {
-//     return res.status(500).json({ error: "Blog id is not valid " });
-//   }
-//   const blog = await Blogs.findByIdAndUpdate(
-//     { _id: id },
-//     { $inc: { [`reactions.${reaction}`]: 1 } }
-//   );
+const getReactions = async (req, res) => {
+  const { id } = req.params;
 
-//   if (!blog)
-//     return res.status(500).json({ error: "Could Not increment the reaction" });
-//   res.status(200).json(blog);
-// };
-// const removeReaction = async (req, res) => {
-//   const { reaction } = req.body;
-//   const { id } = req.params;
-//   if (!mongoose.Types.ObjectId.isValid(id)) {
-//     return res.status(500).json({ error: "Blog id is not valid " });
-//   }
-//   const decrementValue = -1;
-//   const blog = await Blogs.findByIdAndUpdate(
-//     { _id: id },
-//     { $inc: { [`reactions.${reaction}`]: decrementValue } }
-//   );
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(500).json({ error: "Post id is not valid " });
+  }
 
-//   if (!blog)
-//     return res.status(500).json({ error: "Could Not decrement the reaction" });
-//   res.status(200).json(blog);
-// };
+  const reactions = await Blogs.findOne({ _id: id }, { reactions: 1, _id: 0 });
+  if (!reactions) {
+    return res.status(404).json({ error: "Post reactions not found" });
+  }
+  res.status(200).json(reactions);
+};
 
 module.exports = {
   getAllBlogs,
@@ -160,4 +136,5 @@ module.exports = {
   addComment,
   addReaction,
   removeReaction,
+  getReactions,
 };

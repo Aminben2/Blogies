@@ -330,8 +330,8 @@ const Profile = () => {
                     ))}
                 </>
               ) : (
-                <span className="no-comments dark:text-gray-100">
-                  No Comments
+                <span className="no-comments dark:text-gray-100 text-center p-5 block">
+                  No comments
                 </span>
               )}
             </div>

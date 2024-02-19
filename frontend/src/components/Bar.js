@@ -3,17 +3,38 @@ import { useDispatch, useSelector } from "react-redux";
 import ReactionButton from "./ReactionButton";
 import { addReaction, removeReaction } from "../store/postsSlice";
 
-const Bar = ({ _id, reactions }) => {
+const Bar = ({ _id, show }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth);
   const [selectedReaction, setSelectedReaction] = useState(null);
-  const [userReaction, setUserReaction] = useState();
+  const [userReaction, setUserReaction] = useState(null);
   const [preReaction, setPreReaction] = useState(null);
 
   useEffect(() => {
-    const rc = reactions.find((react) => react.userId === user._id);
-    setUserReaction(rc.reaction);
-  }, [_id, user._id, reactions]);
+    const getReactions = async () => {
+      const res = await fetch(
+        `http://localhost:4000/api/blogs/${_id}/reactions`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if (res.ok) {
+        if (data.reactions.length === 0) {
+          setUserReaction(null);
+        } else {
+          const reactionObj = data.reactions.find((r) => r.userId === user._id);
+          setUserReaction(reactionObj.reaction);
+        }
+      } else {
+        console.log(data.error);
+      }
+    };
+    getReactions();
+  }, [_id, user._id, user.token, userReaction]);
 
   const react = async (reactObj) => {
     if (!user) {
@@ -71,7 +92,7 @@ const Bar = ({ _id, reactions }) => {
       const isDone = await unReact({ userId: user._id, reaction: reaction });
       if (isDone) {
         setSelectedReaction(null);
-        setUserReaction(reaction);
+        setUserReaction(null);
       }
     } else {
       // Otherwise, select the clicked reaction
@@ -101,9 +122,12 @@ const Bar = ({ _id, reactions }) => {
     // Set the previous reaction for future undo operation
     setPreReaction({ userId: user._id, reaction: reaction });
   };
-
   return (
-    <div className="flex items-center space-x-4">
+    <div
+      className={`absolute reactBar -top-9 left-0 flex m-1 items-center justify-between dark:bg-gray-500 w-fit rounded-lg py-1  px-3 shadow-lg gap-1 ${
+        show && "opacity-100"
+      } `}
+    >
       <ReactionButton
         icon="like"
         onClick={() => handleReactionClick("like")}
