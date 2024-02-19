@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
 import AuthorPost from "../components/authorPost";
 import PostLoaders from "../components/postLoaders";
-import ReactionBar from "../components/reactionBar";
 import { getPosts } from "../store/postsSlice";
 import { formatDistanceToNow } from "date-fns";
 import Bar from "../components/Bar";

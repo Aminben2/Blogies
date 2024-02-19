@@ -11,6 +11,8 @@ import { formatDistanceToNow } from "date-fns";
 import { NavLink } from "react-router-dom";
 import WarningModal from "../components/WaeningModal";
 import UpdatePostForm from "../components/UpdatePostForm";
+import AuthorPost from "../components/authorPost";
+import Bar from "../components/Bar";
 
 const Profile = () => {
   const user = useSelector((state) => state.auth);
@@ -240,6 +242,10 @@ const Profile = () => {
         <p className="post-content font-bold dark:text-gray-200">
           {blog.content}
         </p>
+        <div className="author">
+          <AuthorPost userId={blog.userId} />
+          <Bar {...blog} />
+        </div>
         <div className="comments flex flex-row dark:bg-gray-600 transition duration-300">
           {blog.ifCommentsEnabaled ? (
             <div

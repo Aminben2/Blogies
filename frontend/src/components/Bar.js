@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactionButton from "./ReactionButton";
-import { addLikedPost, removeLikedPost } from "../store/likedPostsSlice";
 import { addReaction, removeReaction } from "../store/postsSlice";
 
 const Bar = ({ _id, reactions }) => {
@@ -73,7 +72,6 @@ const Bar = ({ _id, reactions }) => {
       if (isDone) {
         setSelectedReaction(null);
         setUserReaction(reaction);
-        dispatch(removeLikedPost(_id));
       }
     } else {
       // Otherwise, select the clicked reaction
@@ -89,7 +87,6 @@ const Bar = ({ _id, reactions }) => {
           if (isDoneAdd) {
             setSelectedReaction(reaction);
             setUserReaction(reaction);
-            dispatch(addLikedPost(_id));
           }
         }
       } else {
@@ -98,7 +95,6 @@ const Bar = ({ _id, reactions }) => {
         if (isDone) {
           setSelectedReaction(reaction);
           setUserReaction(reaction);
-          dispatch(addLikedPost(_id));
         }
       }
     }
