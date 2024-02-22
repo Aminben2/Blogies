@@ -9,7 +9,7 @@ import { removePrevReaction } from "../store/postsSlice";
 export default function OneBlog(props) {
   const dispatch = useDispatch();
   const [revealed, setRevealed] = useState(false);
-  const [userReaction, setUserReaction] = useState("");
+  const [userReaction, setUserReaction] = useState(null);
   const isDarkMode = useSelector((state) => state.theme);
   const { prevReactions } = useSelector((state) => state.posts);
   const user = useSelector((state) => state.auth);
@@ -49,6 +49,7 @@ export default function OneBlog(props) {
   }, [prevReactions, props._id, user, reactions, userReaction]);
 
   let reactionStyle = "";
+
   let reactionIcon = "";
   switch (userReaction) {
     case "like":
@@ -71,7 +72,6 @@ export default function OneBlog(props) {
       reactionStyle = "";
       break;
   }
-  console.log(userReaction);
   const unReact = async (reactObj) => {
     if (!user) {
       return;
@@ -91,12 +91,13 @@ export default function OneBlog(props) {
     const json = await response.json();
     if (response.ok) {
       dispatch(removePrevReaction({ postId: props._id }));
-      setUserReaction("");
-      return json;
+      setUserReaction(null);
     } else {
       console.log(json.error);
     }
   };
+  console.log(prevReactions);
+
   return (
     <section
       className="post border w-full border-green-500 dark:border-green-400"

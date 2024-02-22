@@ -151,7 +151,7 @@ const postSlice = createSlice({
     removePrevReaction(state, action) {
       const { postId } = action.payload;
       state.prevReactions = state.prevReactions.filter(
-        (react) => react.postId === postId
+        (react) => react.postId !== postId
       );
     },
     addComment(state, action) {

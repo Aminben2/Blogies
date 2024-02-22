@@ -1,4 +1,3 @@
-const { ObjectId } = require("mongodb");
 const Blogs = require("../models/blogModel");
 const mongoose = require("mongoose");
 
@@ -113,7 +112,7 @@ const removeReaction = async (req, res) => {
     return res.status(404).json({ error: "Blog not found /failed to update" });
   }
 
-  res.status(200).json(blog);
+  res.status(200).json(blog.reactions);
 };
 
 const getReactions = async (req, res) => {

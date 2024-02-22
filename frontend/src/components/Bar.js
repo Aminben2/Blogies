@@ -136,7 +136,7 @@ const Bar = ({ _id, show, hideReactions }) => {
   const reactionsArray = ["like", "love", "care", "wow"];
   return (
     <div
-      className={`absolute reactBar -top-9 left-0 flex m-1 items-center justify-between dark:bg-gray-500 w-fit rounded-lg py-1  px-3 shadow-lg gap-1 ${
+      className={`absolute reactBar -top-9 left-0 flex m-1 items-center justify-between  bg-gray-100 dark:bg-gray-500 w-fit rounded-lg py-1  px-3 shadow-lg gap-1 ${
         show && "opacity-100"
       } `}
     >
