@@ -244,7 +244,7 @@ const Profile = () => {
         </p>
         <div className="author">
           <AuthorPost userId={blog.userId} />
-          <Bar {...blog} />
+          {/* <Bar {...blog} /> */}
         </div>
         <div className="comments flex flex-row dark:bg-gray-600 transition duration-300">
           {blog.ifCommentsEnabaled ? (

@@ -86,6 +86,7 @@ export const getUserPostsListing = createAsyncThunk(
     }
   }
 );
+
 const postSlice = createSlice({
   name: "posts",
   initialState: {
@@ -93,6 +94,7 @@ const postSlice = createSlice({
     onePost: {},
     userPosts: [],
     userPostsListing: [],
+    prevReactions: [],
     isLoading: false,
     isLoadingOnePost: false,
     isLoadingUserPosts: false,
@@ -103,18 +105,54 @@ const postSlice = createSlice({
       state.posts.push(action.payload);
     },
     addReaction(state, action) {
-      let { postId, reaction } = action.payload;
-      let existingPost = state.posts.find((post) => post._id === postId);
-      if (existingPost) {
-        existingPost.reactions[reaction]++;
+      const { postId, reaction, userId } = action.payload;
+      const existingPostIndex = state.posts.findIndex(
+        (post) => post._id === postId
+      );
+      if (existingPostIndex !== -1) {
+        const existingPost = state.posts[existingPostIndex];
+        const existingReactionIndex = existingPost.reactions.findIndex(
+          (r) => r.userId === userId
+        );
+        if (existingReactionIndex !== -1) {
+          if (
+            existingPost.reactions[existingReactionIndex].reaction === reaction
+          ) {
+            // If the same reaction, remove it
+            state.posts[existingPostIndex].reactions.splice(
+              existingReactionIndex,
+              1
+            );
+          } else {
+            // If different reaction, update it
+            state.posts[existingPostIndex].reactions[
+              existingReactionIndex
+            ].reaction = reaction;
+          }
+        } else {
+          // If no existing reaction, add it
+          state.posts[existingPostIndex].reactions.push({ userId, reaction });
+        }
       }
     },
+
     removeReaction(state, action) {
-      let { postId, reaction } = action.payload;
-      let existingPost = state.posts.find((post) => post._id === postId);
-      if (existingPost) {
-        existingPost.reactions[reaction]--;
+      const { postId, userId } = action.payload;
+      const existingPostIndex = state.posts.findIndex(
+        (post) => post._id === postId
+      );
+      if (existingPostIndex !== -1) {
+        const existingPost = state.posts[existingPostIndex];
+        existingPost.reactions = existingPost.reactions.filter(
+          (r) => r.userId !== userId
+        );
       }
+    },
+    removePrevReaction(state, action) {
+      const { postId } = action.payload;
+      state.prevReactions = state.prevReactions.filter(
+        (react) => react.postId === postId
+      );
     },
     addComment(state, action) {
       const { commentContent, userId } = action.payload;
@@ -189,6 +227,26 @@ const postSlice = createSlice({
         state.userPosts[index] = updatedBlog;
       }
     },
+    savePrevReaction(state, action) {
+      const { postId, reaction } = action.payload;
+      const existingReactionIndex = state.prevReactions.findIndex(
+        (react) => react.postId === postId
+      );
+
+      if (existingReactionIndex !== -1) {
+        // If reaction exists for the post
+        if (state.prevReactions[existingReactionIndex].reaction === reaction) {
+          // If same reaction, remove it
+          state.prevReactions.splice(existingReactionIndex, 1);
+        } else {
+          // If different reaction, update it
+          state.prevReactions[existingReactionIndex].reaction = reaction;
+        }
+      } else {
+        // If no reaction exists for the post, add it
+        state.prevReactions.push(action.payload);
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -247,5 +305,7 @@ export const {
   apreCom,
   editBlog,
   removeReaction,
+  savePrevReaction,
+  removePrevReaction,
 } = postSlice.actions;
 export default postSlice;
