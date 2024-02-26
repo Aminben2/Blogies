@@ -96,7 +96,9 @@ export default function OneBlog(props) {
       console.log(json.error);
     }
   };
-  console.log(prevReactions);
+  const hideOnMouseLeave = () => {
+    setRevealed(false);
+  };
 
   return (
     <section
@@ -134,6 +136,7 @@ export default function OneBlog(props) {
               ? () => unReact({ userId: user._id, postId: props._id })
               : () => setRevealed((pre) => !pre)
           }
+          onMouseEnter={() => setRevealed(true)}
         >
           {userReaction ? (
             <img src={reactionIcon} alt="reactionIcon" className="w-7" />
