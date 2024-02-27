@@ -22,7 +22,6 @@ function AddPostFrom() {
     image: "",
   });
   const [error, setError] = useState("");
-
   const handleChange = (e) => {
     let { value, name } = e.target;
     setPostInfo((preInfo) => {
@@ -41,11 +40,33 @@ function AddPostFrom() {
     });
   };
   const canAddPost = Boolean(postInfo.title) && Boolean(postInfo.content);
+  const validateInputs = () => {
+    if (!postInfo.title) {
+      setError("Please enter a title.");
+      return false;
+    }
+    if (!postInfo.content) {
+      setError("Please enter the content.");
+      return false;
+    }
+    if (!postInfo.category) {
+      setError("Please choose a category.");
+      return false;
+    }
+
+    // Add more validation for other inputs if needed
+
+    setError(""); // Clear any previous error
+    return true;
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!user) {
       setError("You must be Loged in");
+      return;
+    }
+    if (!validateInputs()) {
       return;
     }
 
@@ -153,6 +174,7 @@ function AddPostFrom() {
             </label>
             <input
               onChange={handleChange}
+              required
               type="file"
               name="image"
               className="w-full text-base dark:text-gray-200 dark:bg-gray-600 bg-gray-100 py-2 px-6 rounded-md
@@ -211,6 +233,7 @@ function AddPostFrom() {
               name="category"
               value={postInfo.category}
               onChange={handleChange}
+              required
             >
               {categoriesOptions}
             </select>

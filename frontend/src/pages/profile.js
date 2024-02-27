@@ -12,19 +12,21 @@ import { NavLink } from "react-router-dom";
 import WarningModal from "../components/WaeningModal";
 import UpdatePostForm from "../components/UpdatePostForm";
 import AuthorPost from "../components/authorPost";
-import Bar from "../components/Bar";
+import { getUser } from "../store/usersSlice";
+import EditProfilePicForm from "../components/EditProfilePicForm";
 
 const Profile = () => {
   const user = useSelector((state) => state.auth);
   const posts = useSelector((state) => state.posts.userPosts);
   const mode = useSelector((state) => state.theme);
+  const { userData, isUserLoading } = useSelector((state) => state.users);
   const [activeBlog, setActiveBlog] = useState("");
   const [showComments, setShowCmnt] = useState(false);
   const [showControls, setShowControls] = useState(false);
   const [showConfimrModel, setShowConfirmModel] = useState(false);
   const [privacyUpdate, setPrivacyUpdate] = useState(false);
   const [showEditBlogForm, setShowEditBlogForm] = useState(false);
-
+  const [showEditPicProfile, setShowEditPicProfile] = useState(false);
   const dispatch = useDispatch();
   const menuRef = useRef(null);
 
@@ -43,6 +45,7 @@ const Profile = () => {
   }, []);
   useEffect(() => {
     dispatch(getUserPosts(user._id));
+    dispatch(getUser(user._id));
   }, [dispatch, user._id]);
   const updatePrivacy = async (obj) => {
     const response = await fetch(
@@ -117,7 +120,6 @@ const Profile = () => {
     }
   };
 
-  const editBlog = async () => {};
   const closeAll = () => {
     setPrivacyUpdate(false);
     setShowControls(false);
@@ -131,7 +133,6 @@ const Profile = () => {
     setShowEditBlogForm(true);
     document.body.classList.add("overflow-hidden");
   };
-
   const blogs = posts.map((blog) => {
     return (
       <section key={blog._id} className="post one dark:bg-gray-800 relative">
@@ -145,11 +146,7 @@ const Profile = () => {
           />
         )}
         {showEditBlogForm && (
-          <UpdatePostForm
-            fun={setShowEditBlogForm}
-            handleEdit={editBlog}
-            {...blog}
-          />
+          <UpdatePostForm fun={setShowEditBlogForm} {...blog} />
         )}
         <div className="relative flex justify-between items-center">
           <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-300">
@@ -341,12 +338,42 @@ const Profile = () => {
     );
   });
 
+  const openPopup = () => {
+    setShowEditPicProfile(true);
+    // Toggle body scroll
+    document.body.style.overflow = showEditPicProfile ? "auto" : "hidden";
+  };
+  const closePopup = () => {
+    setShowEditPicProfile(false);
+    // Toggle body scroll
+    document.body.style.overflow = showEditPicProfile ? "auto" : "hidden";
+  };
   return (
     <div className="w-full flex flex-col bg-white dark:bg-gray-900">
       {/* <img className='' src="" alt="backGround" /> */}
       <div className="relative bg-green-400 w-full h-40 shadow-sm text-green-400">
-        {/* <img src="" alt="profile_pic" /> */}
-        <div className="dark:bg-gray-800 dark:text-gray-500 absolute -bottom-16 left-6 profile-pic rounded-full bg-white mx-5 w-40 h-40 shadow-lg"></div>
+        {showEditPicProfile && (
+          <EditProfilePicForm userId={user._id} closePopup={closePopup} />
+        )}
+        <div className="dark:bg-gray-800 dark:text-gray-500 absolute -bottom-16 left-6 profile-pic rounded-full bg-white mx-5 w-40 h-40 shadow-lg">
+          <img
+            src={
+              userData.img
+                ? "http://localhost:4000/uploads/" + userData.img
+                : mode
+                ? "./imgs/defaultPic-dark.jpeg"
+                : "./imgs/defaultPic.jpeg"
+            }
+            alt=""
+            className="w-full rounded-full"
+          />
+          <img
+            onClick={openPopup}
+            className="w-8 absolute top-24 -right-1"
+            src={mode ? "./imgs/camera.png" : "./imgs/camera-dark.png"}
+            alt="edit"
+          />
+        </div>
         <NavLink
           title="Add a new blog"
           to="../addBlog"
@@ -356,7 +383,7 @@ const Profile = () => {
         </NavLink>
       </div>
       {blogs.length > 0 ? (
-        <div className="bg-white flex flex-col items-center w-2/3 m-auto py-20 gap-y-7 dark:bg-gray-800">
+        <div className="bg-white flex flex-col items-center w-full m-auto py-20 gap-y-7 dark:bg-gray-800">
           <h1 className="text-green-500 text-2xl font-bold italic">
             Your Blogs
           </h1>
