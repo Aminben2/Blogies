@@ -6,6 +6,7 @@ const {
   getAllusers,
   getUser,
   updateProfilePic,
+  updateProfileCover,
 } = require("../controllers/userControler");
 
 //Get all users
@@ -21,5 +22,7 @@ router.post("/login", userLogin);
 router.post("/signup", userSignup);
 
 router.patch("/:id/profilePic", updateProfilePic);
+
+router.patch("/:id/profileCover", updateProfileCover);
 
 module.exports = router;

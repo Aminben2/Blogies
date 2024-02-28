@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { updateProfilePic } from "../store/usersSlice";
+import { updateProfileCover } from "../store/usersSlice";
 
-function EditProfileCover({ closePopup, userId }) {
+function EditProfileCover({ closePopup1, userId }) {
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
@@ -10,7 +10,6 @@ function EditProfileCover({ closePopup, userId }) {
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-
   const updatePic = async (e) => {
     e.preventDefault();
 
@@ -30,7 +29,7 @@ function EditProfileCover({ closePopup, userId }) {
     try {
       await isImageSuitableForCover(file);
     } catch (error) {
-      setError("Image verification failed:", error);
+      setError(error);
       return;
     }
 
@@ -46,19 +45,19 @@ function EditProfileCover({ closePopup, userId }) {
     // Update the profile picture
     try {
       const res = await fetch(
-        `http://localhost:4000/api/users/${userId}/profilePic`,
+        `http://localhost:4000/api/users/${userId}/profileCover`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ imageUrl: imagesUrl }),
+          body: JSON.stringify({ imageUrl: imagesUrl[0] }),
         }
       );
       const data = await res.json();
       if (res.ok) {
-        closePopup(false);
-        dispatch(updateProfilePic({ imageUrl: imagesUrl }));
+        closePopup1(false);
+        dispatch(updateProfileCover({ imageUrl: imagesUrl[0] }));
       } else {
         console.error(data.error);
       }
@@ -88,9 +87,9 @@ function EditProfileCover({ closePopup, userId }) {
 
   const isImageSuitableForCover = (file) => {
     const imageUrl = URL.createObjectURL(file);
-    const minWidth = 1200; // Adjust as needed
-    const minHeight = 600; // Adjust as needed
-    const aspectRatio = 2; // Desired aspect ratio (e.g., 2:1)
+    const minWidth = 300; // Adjust as needed
+    const minHeight = 100; // Adjust as needed
+    const aspectRatio = 1; // Desired aspect ratio (e.g., 2:1)
 
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -107,11 +106,10 @@ function EditProfileCover({ closePopup, userId }) {
         // Calculate image aspect ratio
         const imageAspectRatio = width / height;
 
-        // Check if image aspect ratio matches the desired aspect ratio
-        if (Math.abs(imageAspectRatio - aspectRatio) > 0.1) {
-          reject("Image aspect ratio is not suitable.");
-          return;
-        }
+        // if (Math.abs(imageAspectRatio - aspectRatio) > 0.1) {
+        //   reject("Image aspect ratio is not suitable.");
+        //   return;
+        // }
 
         // Image meets all criteria
         resolve("Image is suitable for cover picture.");
@@ -138,7 +136,7 @@ function EditProfileCover({ closePopup, userId }) {
             stroke="currentColor"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
-            onClick={closePopup}
+            onClick={closePopup1}
           >
             <path
               strokeLinecap="round"
@@ -149,7 +147,7 @@ function EditProfileCover({ closePopup, userId }) {
           </svg>
         </div>
         <form className="flex flex-col gap-4" onSubmit={updatePic}>
-          <div>
+          <div className="flex flex-col gap-1">
             <label
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200"
               htmlFor="file_input"
@@ -163,6 +161,7 @@ function EditProfileCover({ closePopup, userId }) {
               name="file"
               onChange={handleFileChange}
             />
+            {error && <span className="text-red-500">{error}</span>}
           </div>
           <button
             type="submit"

@@ -40,7 +40,7 @@ function EditProfilePicForm({ closePopup, userId }) {
     const data = await res.json();
     if (res.ok) {
       closePopup(false);
-      dispatch(updateProfilePic({ imageUrl: imagesUrl }));
+      dispatch(updateProfilePic({ imageUrl: imagesUrl[0] }));
     } else {
       console.log(data.error);
     }
@@ -88,7 +88,7 @@ function EditProfilePicForm({ closePopup, userId }) {
           </svg>
         </div>
         <form className="flex flex-col gap-4" onSubmit={updatePic}>
-          <div>
+          <div className="flex flex-col gap-1">
             <label
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-200"
               htmlFor="file_input"
@@ -102,7 +102,9 @@ function EditProfilePicForm({ closePopup, userId }) {
               name="file"
               onChange={handleFileChange}
             />
-            {error&&<span className="text-red-500 text-sm">{error}</span>}
+            {error && (
+              <span className="text-red-500 text-sm font-bold">{error}</span>
+            )}
           </div>
           <button
             type="submit"

@@ -14,6 +14,7 @@ import UpdatePostForm from "../components/UpdatePostForm";
 import AuthorPost from "../components/authorPost";
 import { getUser } from "../store/usersSlice";
 import EditProfilePicForm from "../components/EditProfilePicForm";
+import EditProfileCover from "../components/EditProfileCover";
 
 const Profile = () => {
   const user = useSelector((state) => state.auth);
@@ -27,6 +28,7 @@ const Profile = () => {
   const [privacyUpdate, setPrivacyUpdate] = useState(false);
   const [showEditBlogForm, setShowEditBlogForm] = useState(false);
   const [showEditPicProfile, setShowEditPicProfile] = useState(false);
+  const [showEditCoverProfile, setShowEditCoverProfile] = useState(false);
   const dispatch = useDispatch();
   const menuRef = useRef(null);
 
@@ -348,12 +350,35 @@ const Profile = () => {
     // Toggle body scroll
     document.body.style.overflow = showEditPicProfile ? "auto" : "hidden";
   };
+
+  const openPopup1 = () => {
+    setShowEditCoverProfile(true);
+    // Toggle body scroll
+    document.body.style.overflow = showEditCoverProfile ? "auto" : "hidden";
+  };
+  const closePopup1 = () => {
+    setShowEditCoverProfile(false);
+    // Toggle body scroll
+    document.body.style.overflow = showEditCoverProfile ? "auto" : "hidden";
+  };
+  console.log(userData.cover);
   return (
     <div className="w-full flex flex-col bg-white dark:bg-gray-900">
-      {/* <img className='' src="" alt="backGround" /> */}
-      <div className="relative bg-green-400 w-full h-40 shadow-sm text-green-400">
+      {userData.cover ? (
+        <img
+          className="w-full h-40"
+          src={"http://localhost:4000/uploads/" + userData.cover}
+          alt="backGround"
+        />
+      ) : (
+        <div className="h-40 w-full bg-green-500"></div>
+      )}
+      <div className="relative">
         {showEditPicProfile && (
           <EditProfilePicForm userId={user._id} closePopup={closePopup} />
+        )}
+        {showEditCoverProfile && (
+          <EditProfileCover userId={user._id} closePopup1={closePopup1} />
         )}
         <div className="dark:bg-gray-800 dark:text-gray-500 absolute -bottom-16 left-6 profile-pic rounded-full bg-white mx-5 w-40 h-40 shadow-lg">
           <img
@@ -369,7 +394,7 @@ const Profile = () => {
           />
           <img
             onClick={openPopup}
-            className="w-8 absolute top-24 -right-1"
+            className="w-8 absolute top-24 -right-1 hover:cursor-pointer"
             src={mode ? "./imgs/camera.png" : "./imgs/camera-dark.png"}
             alt="edit"
           />
@@ -377,10 +402,16 @@ const Profile = () => {
         <NavLink
           title="Add a new blog"
           to="../addBlog"
-          className=" absolute font-bold right-3 -bottom-6 profile-pic rounded p-4 bg-white mx-5   shadow-lg dark:bg-gray-800 dark:text-gray-100"
+          className=" absolute font-bold right-3 -bottom-6 profile-pic rounded p-4 bg-white mx-5   shadow-lg dark:bg-gray-700 dark:text-gray-100"
         >
           What is on your mind ?
         </NavLink>
+        <img
+          onClick={openPopup1}
+          className="w-8 absolute -top-36 right-4 hover:cursor-pointer"
+          src={mode ? "./imgs/camera.png" : "./imgs/camera-dark.png"}
+          alt="edit"
+        />
       </div>
       {blogs.length > 0 ? (
         <div className="bg-white flex flex-col items-center w-full m-auto py-20 gap-y-7 dark:bg-gray-800">

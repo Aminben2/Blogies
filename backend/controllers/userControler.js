@@ -81,6 +81,24 @@ const updateProfilePic = async (req, res) => {
   }
   res.status(200).json(user);
 };
+const updateProfileCover = async (req, res) => {
+  const { id } = req.params;
+  const { imageUrl } = req.body;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(501).json({ error: "User id is not valid" });
+  }
+
+  const user = await User.findByIdAndUpdate(
+    { _id: id },
+    { $set: { cover: imageUrl } },
+    { new: true }
+  );
+
+  if (!user) {
+    return res.status(400).json({ error: "User not found" });
+  }
+  res.status(200).json(user);
+};
 
 module.exports = {
   userLogin,
@@ -88,4 +106,5 @@ module.exports = {
   getAllusers,
   getUser,
   updateProfilePic,
+  updateProfileCover,
 };

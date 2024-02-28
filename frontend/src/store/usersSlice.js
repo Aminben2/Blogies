@@ -40,6 +40,10 @@ const usersSlice = createSlice({
       const { imageUrl } = action.payload;
       state.userData.img = imageUrl;
     },
+    updateProfileCover(state, action) {
+      const { imageUrl } = action.payload;
+      state.userData.o = imageUrl;
+    },
   },
   extraReducers: {
     [getUsers.pending]: (state, action) => {
@@ -65,6 +69,6 @@ const usersSlice = createSlice({
   },
 });
 
-export const { updateProfilePic } = usersSlice.actions;
+export const { updateProfilePic, updateProfileCover } = usersSlice.actions;
 
 export default usersSlice;
