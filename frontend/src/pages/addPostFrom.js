@@ -142,112 +142,110 @@ function AddPostFrom() {
     ));
 
   return (
-    <div className="flex items-center justify-center p-12 dark:bg-gray-800">
-      <div className="mx-auto w-full max-w-[550px] flex flex-col gap-y-10">
-        <p className="text-4xl text-teal-500 dark:text-teal-300 italic underline ">
-          Add a Blog :
-        </p>
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="mb-5">
-            <label
-              className="mb-3 block text-base font-medium text-[#07074D] dark:text-sky-500"
-              htmlFor="title"
-            >
-              Title
-            </label>
-            <input
-              placeholder="Blog title"
-              type="text"
-              name="title"
-              value={postInfo.title}
-              onChange={handleChange}
-              required
-              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] dark:bg-gray-600 dark:text-gray-100 outline-none focus:border-green-400 focus:shadow-md dark:border-0 dark:focus:outline dark:focus:outline-green-400"
-            />
-          </div>
-          <div className="mb-5">
-            <label
-              className="mb-3 block text-base font-medium text-[#07074D] dark:text-sky-500"
-              htmlFor="image"
-            >
-              Picture
-            </label>
-            <input
-              onChange={handleChange}
-              required
-              type="file"
-              name="image"
-              className="w-full text-base dark:text-gray-200 dark:bg-gray-600 bg-gray-100 py-2 px-6 rounded-md
-      file:mr-4 file:py-2 file:px-4
-      file:rounded-full file:border-0
-      file:text-sm file:font-semibold
-      file:bg-gray-200 file:text-green-500
-      hover:file:bg-gray-300 "
-            />
-          </div>
-          <div className="mb-5">
-            <label
-              className="mb-3 block text-base font-medium text-[#07074D] dark:text-sky-500"
-              htmlFor="content"
-            >
-              Content
-            </label>
-            <textarea
-              placeholder="What is on your mind"
-              cols="30"
-              rows="4"
-              name="content"
-              value={postInfo.content}
-              onChange={handleChange}
-              required
-              className="w-full resize-none rounded-md border border-[#e0e0e0] bg-white  py-3 px-6 text-base font-medium text-[#6B7280] dark:bg-gray-600 dark:text-gray-100 outline-none focus:border-green-500 focus:shadow-md dark:border-0 dark:focus:outline dark:focus:outline-green-400"
-            ></textarea>
-          </div>
-          <div className="mb-5">
-            <label
-              className="mb-3 block text-base font-medium text-[#07074D] dark:text-sky-500"
-              htmlFor="tags"
-            >
-              Tags
-            </label>
-            <textarea
-              placeholder="Add some tags"
-              cols="30"
-              rows="4"
-              name="tags"
-              value={postInfo.tags}
-              onChange={handleChange}
-              required
-              className="w-full resize-none rounded-md border border-[#e0e0e0] bg-white  py-3 px-6 text-base font-medium text-[#6B7280] dark:bg-gray-600 dark:text-gray-100 outline-none focus:border-green-500 focus:shadow-md dark:border-0 dark:focus:outline dark:focus:outline-green-400"
-            ></textarea>
-          </div>
-          <div className="mb-5">
-            <label
-              className="mb-3 block text-base font-medium text-[#07074D] dark:text-sky-500"
-              htmlFor="category"
-            >
-              Category
-            </label>
-            <select
-              className="w-full p-2 px-5 rounded dark:bg-gray-600 dark:text-gray-100"
-              name="category"
-              value={postInfo.category}
-              onChange={handleChange}
-              required
-            >
-              {categoriesOptions}
-            </select>
-          </div>
+    <div className="flex items-center justify-center p-8 bg-gray-100 dark:bg-gray-800">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 shadow-lg rounded-lg overflow-hidden">
+        <div className="px-6 py-8">
+          <h2 className="text-3xl font-bold text-center text-green-500 mb-4">
+            Add a Blog
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label
+                className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="title"
+              >
+                Title
+              </label>
+              <input
+                placeholder="Enter blog title"
+                type="text"
+                name="title"
+                value={postInfo.title}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500 dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="image"
+              >
+                Picture
+              </label>
+              <input
+                onChange={handleChange}
+                required
+                type="file"
+                name="image"
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500 dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="content"
+              >
+                Content
+              </label>
+              <textarea
+                placeholder="What's on your mind"
+                cols="30"
+                rows="4"
+                name="content"
+                value={postInfo.content}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500 dark:bg-gray-700 dark:text-white"
+              ></textarea>
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="tags"
+              >
+                Tags
+              </label>
+              <input
+                placeholder="Add some tags"
+                type="text"
+                name="tags"
+                value={postInfo.tags}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500 dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2"
+                htmlFor="category"
+              >
+                Category
+              </label>
+              <select
+                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-green-500 dark:bg-gray-700 dark:text-white"
+                name="category"
+                value={postInfo.category}
+                onChange={handleChange}
+                required
+              >
+                {categoriesOptions}
+              </select>
+            </div>
 
-          {error && <span className="err">{error}</span>}
-          <button
-            className="hover:shadow-form rounded-md bg-green-600 py-3 px-8 text-base font-semibold text-white outline-none"
-            type="submit"
-            disabled={!canAddPost}
-          >
-            Add Blog
-          </button>
-        </form>
+            {error && (
+              <span className="text-red-500 text-sm mb-4">{error}</span>
+            )}
+            <button
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-md focus:outline-none focus:shadow-outline"
+              type="submit"
+              disabled={!canAddPost}
+            >
+              Add Blog
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

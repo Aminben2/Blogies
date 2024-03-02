@@ -17,7 +17,7 @@ import { Home } from "./pages/home";
 import Contact from "./pages/contact";
 import Login from "./pages/login";
 import { Signup } from "./pages/signup";
-import Profile from "./pages/profile";
+import Profile from "./pages/Profile";
 import UserProfile from "./pages/UserProfile";
 
 const router = createBrowserRouter(

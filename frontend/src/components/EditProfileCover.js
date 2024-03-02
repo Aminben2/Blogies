@@ -124,7 +124,10 @@ function EditProfileCover({ closePopup1, userId }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm z-50 flex items-center justify-center">
+    <div
+      onClick={closePopup1}
+      className="fixed inset-0 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm z-50 flex items-center justify-center"
+    >
       <div className="flex flex-col gap-3 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-gray-900 p-3 rounded-lg shadow-lg dark:bg-gray-800">
         <div className="flex justify-between items-center">
           <h1 className="text-lg font-bold dark:text-gray-100">
