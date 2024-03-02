@@ -14,8 +14,6 @@ export default function OneBlog(props) {
   const { prevReactions } = useSelector((state) => state.posts);
   const user = useSelector((state) => state.auth);
 
-  const [reactions, setReactions] = useState([]);
-
   useEffect(() => {
     const getReactions = async (id) => {
       const res = await fetch(
@@ -29,24 +27,22 @@ export default function OneBlog(props) {
       );
       const data = await res.json();
       if (res.ok) {
-        setReactions(data.reactions);
+        const reactObj = data.reactions.find((r) => r.userId === user._id);
+        if (reactObj) {
+          setUserReaction(reactObj.reaction);
+        }
       } else {
         console.log(data.error);
       }
     };
     getReactions(props._id);
-  }, [dispatch, props._id, setReactions, user]);
+  }, [dispatch, props._id, user]);
   useEffect(() => {
     const reactObj = prevReactions.find((r) => r.postId === props._id);
     if (reactObj) {
       setUserReaction(reactObj.reaction);
-    } else {
-      const reactObj = reactions.find((r) => r.userId === user._id);
-      if (reactObj) {
-        setUserReaction(reactObj.reaction);
-      }
     }
-  }, [prevReactions, props._id, user, reactions, userReaction]);
+  }, [prevReactions, props._id, user, userReaction]);
 
   let reactionStyle = "";
 
@@ -96,10 +92,7 @@ export default function OneBlog(props) {
       console.log(json.error);
     }
   };
-  const hideOnMouseLeave = () => {
-    setRevealed(false);
-  };
-
+  console.log(userReaction);
   return (
     <section
       className="post border w-full border-green-500 dark:border-green-400"
@@ -136,7 +129,6 @@ export default function OneBlog(props) {
               ? () => unReact({ userId: user._id, postId: props._id })
               : () => setRevealed((pre) => !pre)
           }
-          onMouseEnter={() => setRevealed(true)}
         >
           {userReaction ? (
             <img src={reactionIcon} alt="reactionIcon" className="w-7" />
