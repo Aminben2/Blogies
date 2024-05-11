@@ -42,7 +42,7 @@ const usersSlice = createSlice({
     },
     updateProfileCover(state, action) {
       const { imageUrl } = action.payload;
-      state.userData.o = imageUrl;
+      state.userData.cover = imageUrl;
     },
   },
   extraReducers: {

@@ -3,21 +3,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../store/usersSlice";
 
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import { delComment } from "../store/postsSlice";
+import { delComment, likeComment, unlikeComment } from "../store/postsSlice";
 import { pinCom } from "../store/postsSlice";
 import { apreCom } from "../store/postsSlice";
 import { NavLink } from "react-router-dom";
 
 export const Comment = (props) => {
   const { users } = useSelector((state) => state.users);
+  const isDarkMode = useSelector((state) => state.theme);
   const [showCommentControls, setShowCommentControls] = useState(false);
   const user = useSelector((state) => state.auth);
+  const [userLoved, setUserLoved] = useState(null);
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
   const menuRef = useRef(null);
+  useEffect(() => {
+    let isLiked;
+    if (!props.likes == 0) {
+      isLiked = props.likes.find((l) => l.userId === user._id);
+    }
+    if (isLiked) setUserLoved(isLiked.userId);
+  }, [props.likes, user]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -105,11 +114,42 @@ export const Comment = (props) => {
       console.log(json.error);
     }
   };
+  const likeUnlike = async () => {
+    const res = await fetch(
+      `http://localhost:4000/api/blogs/${props.postId}/likeComment`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ userId: props.userId, commentId: props._id }),
+      }
+    );
+
+    const data = await res.json();
+    const cmnt = {
+      commentId: props._id,
+      userId: props.userId,
+    };
+    if (res.ok) {
+      // Update the state
+      if (userLoved) {
+        dispatch(unlikeComment(cmnt));
+        setUserLoved(null);
+      } else {
+        dispatch(likeComment(cmnt));
+        setUserLoved(props.userId);
+      }
+    } else {
+      console.log(data.error);
+    }
+  };
 
   return (
     <>
       {userComment && (
-        <div className="cmnt w-fit py-4 mt-3 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg sm:shadow-sm md:w-2/3 dark:bg-gray-400 dark:border-0">
+        <div className="cmnt w-fit py-4 mt-3 bg-white border-b-2 border-r-2 border-gray-200 sm:px-4 sm:py-4 md:px-4 sm:rounded-lg sm:shadow-sm md:w-2/3 dark:bg-gray-400 dark:border-0 flex justify-between items-center">
           <div className="relative flex flex-row md-10">
             <NavLink to={"/profile/" + props.userId}>
               <img
@@ -202,6 +242,17 @@ export const Comment = (props) => {
                 )}
               </div>
             )}
+          </div>
+
+          <div className="flex items-center gap-2" onClick={likeUnlike}>
+            <img
+              className="w-5"
+              src={userLoved ? "../imgs/loved.png" : "../imgs/darkHeart.png"}
+              alt=""
+            />
+            <span className="font-bold text-sm">
+              {props.likes ? props.likes.length : "0"}
+            </span>
           </div>
         </div>
       )}

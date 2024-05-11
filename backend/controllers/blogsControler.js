@@ -129,6 +129,50 @@ const getReactions = async (req, res) => {
   res.status(200).json(reactions);
 };
 
+const likeComment = async (req, res) => {
+  const { id } = req.params;
+  const { userId, commentId } = req.body;
+
+  try {
+    const blog = await Blogs.findById(id);
+
+    if (!blog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+
+    const commentIndex = blog.comments.findIndex(
+      (comment) => comment._id == commentId
+    );
+
+    if (commentIndex === -1) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    const comment = blog.comments[commentIndex];
+    const userLikedIndex = comment.likes.findIndex(
+      (like) => like.userId == userId
+    );
+
+    if (userLikedIndex === -1) {
+      // User has not liked the comment yet, so add the like
+      comment.likes.push({ userId });
+    } else {
+      // User has already liked the comment, so remove the like
+      comment.likes.splice(userLikedIndex, 1);
+    }
+
+    // Save the updated blog document
+    await blog.save();
+
+    return res
+      .status(200)
+      .json({ error: "Comment liked/unliked successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   getAllBlogs,
   getOneBlog,
@@ -137,4 +181,5 @@ module.exports = {
   addReaction,
   removeReaction,
   getReactions,
+  likeComment,
 };

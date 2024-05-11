@@ -12,6 +12,13 @@ const reactionSchema = new Schema({
   },
 });
 
+const commentLikesSchema = new Schema({
+  userId: {
+    type: String,
+    required: true,
+  },
+});
+
 const commentSchema = new Schema(
   {
     userId: {
@@ -29,6 +36,10 @@ const commentSchema = new Schema(
     loved: {
       type: Boolean,
       default: false,
+    },
+    likes: {
+      type: [commentLikesSchema],
+      default: [],
     },
   },
   { timestamps: true }

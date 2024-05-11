@@ -32,6 +32,7 @@ export const Blog = () => {
           key={ele._id}
           {...ele}
           author={user._id === ele.userId ? "true" : "false"}
+          postId={onePost._id}
         />
       )),
       ...nonPinnedComments.map((ele) => (
@@ -39,11 +40,11 @@ export const Blog = () => {
           key={ele._id}
           {...ele}
           author={user._id === ele.userId ? "true" : "false"}
+          postId={onePost._id}
         />
       )),
     ];
   }
-
   const handleChange = (e) => {
     setComment(e.target.value);
   };

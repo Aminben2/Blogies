@@ -92,7 +92,6 @@ export default function OneBlog(props) {
       console.log(json.error);
     }
   };
-  console.log(userReaction);
   return (
     <section
       className="post border w-full border-green-500 dark:border-green-400"

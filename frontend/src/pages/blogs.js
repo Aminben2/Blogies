@@ -17,6 +17,7 @@ const Blogs = () => {
     dispatch(getPosts());
   }, [dispatch]);
 
+
   return (
     <div className="main dark:bg-gray-800 ">
       {isLoading ? (

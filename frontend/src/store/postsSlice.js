@@ -11,7 +11,7 @@ export const getPosts = createAsyncThunk("posts/getPosts", async () => {
       },
     });
     if (!response.ok) {
-      throw new Error("Could not fetch the blogs");
+      throw new Error("Could not fetch the posts");
     }
     const data = await response.json();
     return data;
@@ -55,7 +55,7 @@ export const getUserPosts = createAsyncThunk(
       });
 
       if (!response.ok) {
-        throw new Error("Could not fetch user blogs");
+        throw new Error("Could not fetch user posts");
       }
       const data = await response.json();
       return data;
@@ -77,7 +77,7 @@ export const getUserPostsListing = createAsyncThunk(
       });
 
       if (!response.ok) {
-        throw new Error("Could not fetch user blogs");
+        throw new Error("Could not fetch user posts");
       }
       const data = await response.json();
       return data;
@@ -247,6 +247,32 @@ const postSlice = createSlice({
         state.prevReactions.push(action.payload);
       }
     },
+    likeComment(state, action) {
+      const { commentId, userId } = action.payload;
+      const post = state.onePost;
+      if (post) {
+        const comment = post.comments.find(
+          (comment) => comment._id === commentId
+        );
+        if (comment) {
+          comment.likes.push({ userId });
+        }
+      }
+    },
+    unlikeComment(state, action) {
+      const { commentId, userId } = action.payload;
+      const post = state.onePost;
+      if (post) {
+        const comment = post.comments.find(
+          (comment) => comment._id === commentId
+        );
+        if (comment) {
+          comment.likes = comment.likes.filter(
+            (like) => like.userId !== userId
+          );
+        }
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -307,5 +333,7 @@ export const {
   removeReaction,
   savePrevReaction,
   removePrevReaction,
+  likeComment,
+  unlikeComment,
 } = postSlice.actions;
 export default postSlice;
