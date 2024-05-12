@@ -1,9 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Outlet } from "react-router-dom";
-import Footer from "../components/footer";
+import Footer from "../partials/Footer";
 import { logout } from "../store/authSlice";
 import { switchTheme } from "../store/modeSlice";
+import Header from "../partials/Header";
 
 export const RootLayout = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ export const RootLayout = () => {
         isDarkMOde ? "dark" : ""
       }`}
     >
-      <header className="z-50  sticky top-0 bg-white dark:text-gray-200 dark:bg-gray-900 shadow-md flex items-center justify-between px-8">
+      {/* <header className="z-50  sticky top-0 bg-white dark:text-gray-200 dark:bg-gray-900 shadow-md flex items-center justify-between px-8">
         <h1 className="w-3/12">
           <NavLink to={"/"}>
             <h1 className="text-3xl dark:text-green-400 text-green-500 font-bold flex flex-row items-center">
@@ -110,7 +111,8 @@ export const RootLayout = () => {
             )}
           </ul>
         </div>
-      </header>
+      </header> */}
+      <Header />
       <Outlet />
       <Footer />
     </div>

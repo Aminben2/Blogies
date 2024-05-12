@@ -14,7 +14,7 @@ import {
   Route,
 } from "react-router-dom";
 import { Home } from "./pages/home";
-import Contact from "./pages/contact";
+import Contact from "./pages/Contact";
 import Login from "./pages/login";
 import { Signup } from "./pages/signup";
 import Profile from "./pages/Profile";
