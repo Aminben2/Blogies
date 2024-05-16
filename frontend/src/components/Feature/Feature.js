@@ -2,7 +2,7 @@ import React from "react";
 
 function Feature() {
   return (
-    <div className="max-w-7xl max-md:max-w-xl mx-auto font-[sans-serif] text-[#333]">
+    <div className="w-full px-10 border-t max-md:max-w-xl font-[sans-serif] dark:bg-gray-700 text-[#333] py-20 dark:text-gray-100">
       <div className="grid xl:grid-cols-3 md:grid-cols-2 gap-12 items-center">
         <div>
           <img
@@ -15,7 +15,7 @@ function Feature() {
             <h2 className="sm:text-3xl text-2xl font-extrabold">
               Discover Our Exclusive Features
             </h2>
-            <p className="text-sm text-gray-500 mt-6">
+            <p className="text-sm text-gray-500 mt-6 dark:text-gray-300">
               Unlock a world of possibilities with our exclusive features.
               Explore how our unique offerings can transform your journey and
               empower you to achieve more.

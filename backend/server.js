@@ -22,6 +22,7 @@ const userRouter = require("./routes/user");
 const contactRouter = require("./routes/contact");
 const profileRouter = require("./routes/profile");
 const categoriesRouter = require("./routes/category");
+const notificationRouter = require("./routes/notification");
 
 // connect to database
 mongoose
@@ -78,3 +79,4 @@ app.use("/api/users", userRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/categories", categoriesRouter);
+app.use("/api/notification", notificationRouter);

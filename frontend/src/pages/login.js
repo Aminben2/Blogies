@@ -70,8 +70,8 @@ const Login = () => {
           alt="Placeholder"
           className="w-1/2"
         />
-        <h1 className="text-green-500 -ms-6  font-extrabold text-7xl">
-          Blogies
+        <h1 className="text-green-500 -ms-8 font-extrabold text-7xl">
+          logies
         </h1>
       </div>
       <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">

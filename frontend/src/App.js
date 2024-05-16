@@ -19,6 +19,7 @@ import Login from "./pages/login";
 import { Signup } from "./pages/signup";
 import Profile from "./pages/Profile";
 import UserProfile from "./pages/UserProfile";
+import About from "./pages/About";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/:id" element={<UserProfile />} />
       </Route>
+      <Route path="/about" element={<About />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="*" element={<NotFound />} />

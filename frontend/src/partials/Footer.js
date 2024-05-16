@@ -24,7 +24,7 @@ const Footer = () => {
           />
           <button
             type="button"
-            className="bg-gray-600 hover:bg-gray-700 text-white text-sm rounded-full px-5 py-2.5 ml-4 transition-all dark:bg-green-600 dark:text-gray-100 dark:font-blod"
+            className="bg-green-600 hover:bg-green-700 text-white text-sm rounded-full px-5 py-2.5 ml-4 transition-all dark:bg-green-600 dark:text-gray-100 dark:font-blod"
           >
             Submit
           </button>

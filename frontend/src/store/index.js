@@ -4,6 +4,7 @@ import usersSlice from "./usersSlice";
 import authSlice from "./authSlice";
 import themeSlice from "./modeSlice";
 import categorySlice from "./categorySlice";
+import notificationsSlice from "./NotificationsSlice";
 const store = configureStore({
   reducer: {
     posts: postSlice.reducer,
@@ -11,6 +12,7 @@ const store = configureStore({
     auth: authSlice.reducer,
     theme: themeSlice.reducer,
     categories: categorySlice.reducer,
+    notifications: notificationsSlice.reducer,
   },
 });
 

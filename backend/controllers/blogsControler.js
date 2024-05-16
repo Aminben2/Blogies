@@ -1,5 +1,7 @@
 const Blogs = require("../models/blogModel");
+const Notification = require("../models/notificationModal");
 const mongoose = require("mongoose");
+const userModel = require("../models/userModel");
 
 const getAllBlogs = async (req, res) => {
   const blogs = await Blogs.find().sort({ createdAt: -1 });
@@ -53,8 +55,25 @@ const addComment = async (req, res) => {
     { _id: id },
     { $push: { comments: req.body } }
   );
-
   if (!blog) return res.status(404).json({ error: "No such blog" });
+
+  if (!req.body.userId === blog.userId) {
+    const userCmnt = await userModel.findOne({ _id: req.body.userId });
+    if (!userCmnt)
+      return res.status(500).json({ error: "Commenting user not found" });
+
+    const notif = await Notification.create({
+      postOwner: blog.userId,
+      userId: req.body.userId,
+      postId: blog._id,
+      title: `${userCmnt.username} commented on your post`,
+      subject: `${userCmnt.username} commented with: ${req.body.comment}`,
+    });
+
+    if (!notif)
+      return res.status(500).json({ error: "Could not create notif" });
+  }
+
   res.status(200).json(blog);
 };
 const addReaction = async (req, res) => {
@@ -86,6 +105,23 @@ const addReaction = async (req, res) => {
     }
 
     await blog.save();
+
+    if (!userId === blog.userId) {
+      const userCmnt = await userModel.findOne({ _id: userId });
+      if (!userCmnt)
+        return res.status(500).json({ error: "reacting user not found" });
+
+      const notif = await Notification.create({
+        postOwner: blog.userId,
+        userId: userId,
+        postId: blog._id,
+        title: `${userCmnt.username} reacted on your post`,
+        subject: `${userCmnt.username} reacted with: ${reaction}`,
+      });
+
+      if (!notif)
+        return res.status(500).json({ error: "Could not create notif" });
+    }
 
     res.status(200).json(blog);
   } catch (error) {
@@ -164,6 +200,26 @@ const likeComment = async (req, res) => {
     // Save the updated blog document
     await blog.save();
 
+    if (!userId === blog.userId) {
+      const userCmnt = await userModel.findOne({ _id: userId });
+      if (!userCmnt)
+        return res.status(500).json({ error: "reacting user not found" });
+
+      const postOwnner = await userModel.findOne({ _id: blog.userId });
+      if (!postOwnner)
+        return res.status(500).json({ error: "reacting user not found" });
+
+      const notif = await Notification.create({
+        postOwner: blog.userId,
+        userId: userId,
+        postId: blog._id,
+        title: `your comment got a like`,
+        subject: `${userCmnt.username} liked your comment on ${postOwnner.username}'s post`,
+      });
+
+      if (!notif)
+        return res.status(500).json({ error: "Could not create notif" });
+    }
     return res
       .status(200)
       .json({ error: "Comment liked/unliked successfully" });

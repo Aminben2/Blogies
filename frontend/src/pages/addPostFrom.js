@@ -12,7 +12,7 @@ function AddPostFrom() {
   );
   useEffect(() => {
     dispatch(getCategories());
-  }, [dispatch]);k
+  }, [dispatch]);
   const navigate = useNavigate();
   let [postInfo, setPostInfo] = React.useState({
     title: "",

@@ -1,8 +1,8 @@
-const express = require("express")
+const express = require("express");
 
-const router = express.Router()
-const { addRepport } = require("../controllers/contactController")
+const router = express.Router();
+const { addRepport } = require("../controllers/contactController");
 
-router.post("/", addRepport)
+router.post("/", addRepport);
 
-module.exports = router
+module.exports = router;

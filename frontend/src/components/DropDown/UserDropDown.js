@@ -9,9 +9,16 @@ function UserDropDown({ setShow }) {
   const dispatch = useDispatch();
 
   return (
-    <ul className="absolute -right-5 top-12 shadow-lg bg-white dark:bg-gray-700 py-2 z-[1000] min-w-full w-max rounded-lg max-h-96 overflow-auto">
+    <ul
+      onMouseLeave={() => {
+        setTimeout(() => {
+          setShow();
+        }, 1000);
+      }}
+      className="absolute -right-5 top-12 shadow-lg bg-white dark:bg-gray-700 py-2 z-[1000] min-w-full w-max rounded-lg max-h-96 overflow-auto transition-all duration-1000"
+    >
       <NavLink to="/profile" onClick={setShow}>
-        <li className="py-2.5 px-6 flex items-center hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-500 text-[#333]  text-sm cursor-pointe r">
+        <li className="py-2.5 px-6 flex items-center hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-500 text-[#333] text-sm cursor-pointe r">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
@@ -27,23 +34,26 @@ function UserDropDown({ setShow }) {
         </li>
       </NavLink>
       {!user ? (
-        <NavLink to="/login">
-          <li className="py-2.5 px-6 flex items-center dark:text-gray-100 dark:hover:bg-gray-500 hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
-            <i className="fa-solid fa-right-to-bracket w-[18px] h-[18px] mr-3"></i>
-            {/* <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              className="w-[18px] h-[18px] mr-3"
-              viewBox="0 0 24 24"
-            >
-              <path d="M20 3H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM9 17v-2h6v2zm7-5H8V8h8z"></path>
-            </svg> */}
-            Log in
-          </li>
-        </NavLink>
+        <>
+          <NavLink to="/login" onClick={setShow}>
+            <li className="py-2.5 px-6 flex items-center dark:text-gray-100 dark:hover:bg-gray-500 hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
+              <i className="fa-solid fa-right-to-bracket w-[18px] h-[18px] mr-3"></i>
+              Login
+            </li>
+          </NavLink>
+          <NavLink to="/signup" onClick={setShow}>
+            <li className="py-2.5 px-6 flex items-center dark:text-gray-100 dark:hover:bg-gray-500 hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
+              <i className="fa-solid fa-right-to-bracket w-[18px] h-[18px] mr-3"></i>
+              Signup
+            </li>
+          </NavLink>
+        </>
       ) : (
         <li
-          onClick={() => dispatch(logout())}
+          onClick={() => {
+            setShow();
+            dispatch(logout());
+          }}
           className="py-2.5 px-6 flex items-center dark:text-gray-100 dark:hover:bg-gray-500 hover:bg-gray-100 text-[#333] text-sm cursor-pointer"
         >
           <svg

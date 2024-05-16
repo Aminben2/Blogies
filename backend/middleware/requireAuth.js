@@ -17,7 +17,7 @@ const requireAuth = async (req, res, next) => {
     const { _id } = jwk.verify(token, process.env.SECRET);
 
     // Find the user by the id from the token and send it
-    req.user = await User.findOne({ _id }).select("_id");
+    req.user = await User.findOne({ _id });
     next();
   } catch (error) {
     console.log(error);

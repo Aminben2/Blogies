@@ -1,39 +1,39 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Hero() {
   return (
-    <div className="font-sans text-[#fff]">
-      <div className="grid lg:grid-cols-2 items-center gap-y-6 bg-blue-500">
+    <div className="font-sans text-[#fff] dark:bg-gray-700">
+      <div className="flex flex-row items-center gap-y-6 dark:bg-green-700 py-8 bg-green-600">
         <div className="max-lg:order-1 max-lg:text-center sm:p-12 p-4">
           <h2 className="lg:text-5xl text-3xl font-bold mb-4 lg:!leading-[56px]">
-            Elevate Your Experience with Modern Elegance
+            Stories made simple. Share yours now
           </h2>
           <p className="mt-4 text-base leading-relaxed">
-            Laboris qui Lorem ad tempor ut reprehenderit. Nostrud anim nulla
-            officia ea sit deserunt. Eu eu quis anim aute Laboris qui Lorem ad
-            tempor ut reprehenderit.
+            Empower your voice with our platform, where sharing your thoughts,
+            posting updates, and capturing memorable moments through blogs is
+            just a click away.
           </p>
           <button
             type="button"
-            className="bg-transparent hover:bg-blue-600 border-2 border-white mt-10 transition-all text-white font-bold text-sm rounded-md px-6 py-2.5"
+            className="bg-transparent hover:bg-green-800 border-2 border-white mt-10 transition-all text-white font-bold text-sm rounded-md px-6 py-2.5"
           >
-            Get Started
+            <Link to="/blogs">Get Started</Link>
           </button>
         </div>
-        <div className="lg:h-[440px] flex items-center">
+        <div className="lg:h-[440px] flex items-center px-20 max-md:hidden">
           <img
-            src="https://readymadeui.com/team-image.webp"
-            className="w-full h-full object-cover"
+            src="./imgs/logo-bebo-light.png"
+            className="object-cover"
             alt="Dining Experience"
           />
         </div>
       </div>
-      <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 px-4 my-12">
-        <div className="bg-gray-100 p-6 rounded-md">
+      <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 p-12 dark:bg-gray-700">
+        <div className="bg-gray-50 p-6 rounded-md dark:bg-gray-800">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            fill="#007bff"
-            className="w-12 mb-4 inline-block bg-white p-3 rounded-md"
+            className="w-12 mb-4 inline-block bg-white p-3 rounded-md fill-green-600"
             viewBox="0 0 32 32"
           >
             <path
@@ -45,22 +45,23 @@ function Hero() {
               data-original="#000000"
             />
           </svg>
-          <h3 className="text-xl font-bold mb-2 text-[#333]">Customization</h3>
-          <p className="text-sm text-[#333]">
+          <h3 className="text-xl font-bold mb-2 text-[#333] dark:text-gray-100">
+            Customization
+          </h3>
+          <p className="text-sm text-[#333] dark:text-gray-100">
             Tailor our product to suit your needs.
           </p>
           <a
-            href="javascript:void(0);"
-            className="text-blue-600 font-bold inline-block text-sm mt-2 hover:underline"
+            href=""
+            className="text-green-600 font-bold inline-block text-sm mt-2 hover:underline"
           >
             Learn more
           </a>
         </div>
-        <div className="bg-gray-100 p-6 rounded-md">
+        <div className="bg-gray-50 p-6 rounded-md dark:bg-gray-800">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            fill="#007bff"
-            className="w-12 mb-4 inline-block bg-white p-3 rounded-md"
+            className="w-12 mb-4 inline-block bg-white p-3 rounded-md fill-green-600"
             viewBox="0 0 512.001 512.001"
           >
             <path
@@ -68,25 +69,26 @@ function Hero() {
               data-original="#000000"
             />
           </svg>
-          <h3 className="text-xl font-bold mb-2 text-[#333]">Support</h3>
-          <p className="text-sm text-[#333]">
+          <h3 className="text-xl font-bold mb-2 text-[#333] dark:text-gray-100">
+            Support
+          </h3>
+          <p className="text-sm text-[#333] dark:text-gray-100">
             24/7 customer support for all your inquiries.
           </p>
           <a
-            href="javascript:void(0);"
-            className="text-blue-600 font-bold inline-block text-sm mt-2 hover:underline"
+            href=""
+            className="text-green-600 font-bold inline-block text-sm mt-2 hover:underline"
           >
             Learn more
           </a>
         </div>
-        <div className="bg-gray-100 p-6 rounded-md">
+        <div className="bg-gray-50 p-6 rounded-md dark:bg-gray-800">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            fill="#007bff"
-            className="w-12 mb-4 inline-block bg-white p-3 rounded-md"
+            className="w-12 mb-4 inline-block bg-white p-3 rounded-md fill-green-600"
             viewBox="0 0 24 24"
           >
-            <g fill-rule="evenodd" clip-rule="evenodd">
+            <g fillRule="evenodd" clipRule="evenodd">
               <path
                 d="M17.03 8.97a.75.75 0 0 1 0 1.06l-4.2 4.2a.75.75 0 0 1-1.154-.114l-1.093-1.639L8.03 15.03a.75.75 0 0 1-1.06-1.06l3.2-3.2a.75.75 0 0 1 1.154.114l1.093 1.639L15.97 8.97a.75.75 0 0 1 1.06 0z"
                 data-original="#000000"
@@ -101,22 +103,23 @@ function Hero() {
               />
             </g>
           </svg>
-          <h3 className="text-xl font-bold mb-2 text-[#333]">Performance</h3>
-          <p className="text-sm text-[#333]">
+          <h3 className="text-xl font-bold mb-2 text-[#333] dark:text-gray-100">
+            Performance
+          </h3>
+          <p className="text-sm text-[#333] dark:text-gray-100">
             Experience blazing-fast performance with our product.
           </p>
           <a
-            href="javascript:void(0);"
-            className="text-blue-600 font-bold inline-block text-sm mt-2 hover:underline"
+            href=""
+            className="text-green-600 font-bold inline-block text-sm mt-2 hover:underline"
           >
             Learn more
           </a>
         </div>
-        <div className="bg-gray-100 p-6 rounded-md">
+        <div className="bg-gray-50 p-6 rounded-md dark:bg-gray-800">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            fill="#007bff"
-            className="w-12 mb-4 inline-block bg-white p-3 rounded-md"
+            className="w-12 mb-4 inline-block bg-white p-3 rounded-md fill-green-600"
             viewBox="0 0 682.667 682.667"
           >
             <defs>
@@ -126,12 +129,12 @@ function Hero() {
             </defs>
             <g
               fill="none"
-              stroke="#007bff"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-miterlimit="10"
-              stroke-width="40"
-              clip-path="url(#a)"
+              stroke="#38a169"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeMiterlimit="10"
+              strokeWidth="40"
+              clipPath="url(#a)"
               transform="matrix(1.33 0 0 -1.33 0 682.667)"
             >
               <path
@@ -144,13 +147,15 @@ function Hero() {
               />
             </g>
           </svg>
-          <h3 className="text-xl font-bold mb-2 text-[#333]">Security</h3>
-          <p className="text-sm text-[#333]">
+          <h3 className="text-xl font-bold mb-2 text-[#333] dark:text-gray-100">
+            Security
+          </h3>
+          <p className="text-sm text-[#333] dark:text-gray-100">
             Your data is protected by the latest security measures.
           </p>
           <a
-            href="javascript:void(0);"
-            className="text-blue-600 font-bold inline-block text-sm mt-2 hover:underline"
+            href=""
+            className="text-green-600 font-bold inline-block text-sm mt-2 hover:underline"
           >
             Learn more
           </a>

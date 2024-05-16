@@ -278,4 +278,6 @@ body::-webkit-scrollbar {
   animation: appOpen 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
-
+.nav-op a.active{
+  color: #38a169;
+}
