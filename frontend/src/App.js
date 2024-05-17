@@ -20,6 +20,7 @@ import { Signup } from "./pages/signup";
 import Profile from "./pages/Profile";
 import UserProfile from "./pages/UserProfile";
 import About from "./pages/About";
+import Chats from "./pages/Chats";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
         <Route path="/contact" element={<Contact />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/:id" element={<UserProfile />} />
+        <Route path="/chats" element={<Chats />} />
       </Route>
       <Route path="/about" element={<About />} />
       <Route path="/login" element={<Login />} />

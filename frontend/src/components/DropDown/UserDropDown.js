@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../../store/usersSlice";
 import { logout } from "../../store/authSlice";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 function UserDropDown({ setShow }) {
   const user = useSelector((state) => state.auth);
@@ -49,26 +49,40 @@ function UserDropDown({ setShow }) {
           </NavLink>
         </>
       ) : (
-        <li
-          onClick={() => {
-            setShow();
-            dispatch(logout());
-          }}
-          className="py-2.5 px-6 flex items-center dark:text-gray-100 dark:hover:bg-gray-500 hover:bg-gray-100 text-[#333] text-sm cursor-pointer"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            className="w-[18px] h-[18px] mr-3"
-            viewBox="0 0 6.35 6.35"
+        <>
+          <li
+            onClick={() => {
+              setShow();
+              dispatch(logout());
+            }}
+            className="py-2.5 px-6 flex items-center dark:text-gray-100 dark:hover:bg-gray-500 hover:bg-gray-100 text-[#333] text-sm cursor-pointer"
           >
-            <path
-              d="M3.172.53a.265.266 0 0 0-.262.268v2.127a.265.266 0 0 0 .53 0V.798A.265.266 0 0 0 3.172.53zm1.544.532a.265.266 0 0 0-.026 0 .265.266 0 0 0-.147.47c.459.391.749.973.749 1.626 0 1.18-.944 2.131-2.116 2.131A2.12 2.12 0 0 1 1.06 3.16c0-.65.286-1.228.74-1.62a.265.266 0 1 0-.344-.404A2.667 2.667 0 0 0 .53 3.158a2.66 2.66 0 0 0 2.647 2.663 2.657 2.657 0 0 0 2.645-2.663c0-.812-.363-1.542-.936-2.03a.265.266 0 0 0-.17-.066z"
-              data-original="#000000"
-            ></path>
-          </svg>
-          Logout
-        </li>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              className="w-[18px] h-[18px] mr-3"
+              viewBox="0 0 6.35 6.35"
+            >
+              <path
+                d="M3.172.53a.265.266 0 0 0-.262.268v2.127a.265.266 0 0 0 .53 0V.798A.265.266 0 0 0 3.172.53zm1.544.532a.265.266 0 0 0-.026 0 .265.266 0 0 0-.147.47c.459.391.749.973.749 1.626 0 1.18-.944 2.131-2.116 2.131A2.12 2.12 0 0 1 1.06 3.16c0-.65.286-1.228.74-1.62a.265.266 0 1 0-.344-.404A2.667 2.667 0 0 0 .53 3.158a2.66 2.66 0 0 0 2.647 2.663 2.657 2.657 0 0 0 2.645-2.663c0-.812-.363-1.542-.936-2.03a.265.266 0 0 0-.17-.066z"
+                data-original="#000000"
+              ></path>
+            </svg>
+            Logout
+          </li>
+          <li className="py-2.5 px-6 flex items-center dark:text-gray-100 dark:hover:bg-gray-500 hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
+            <Link to="/chats" className="flex items-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-[16px] h-[16px] mr-3"
+                viewBox="0 0 512 512"
+              >
+                <path d="M160 368c26.5 0 48 21.5 48 48v16l72.5-54.4c8.3-6.2 18.4-9.6 28.8-9.6H448c8.8 0 16-7.2 16-16V64c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16V352c0 8.8 7.2 16 16 16h96zm48 124l-.2 .2-5.1 3.8-17.1 12.8c-4.8 3.6-11.3 4.2-16.8 1.5s-8.8-8.2-8.8-14.3V474.7v-6.4V468v-4V416H112 64c-35.3 0-64-28.7-64-64V64C0 28.7 28.7 0 64 0H448c35.3 0 64 28.7 64 64V352c0 35.3-28.7 64-64 64H309.3L208 492z" />
+              </svg>
+              Messages
+            </Link>
+          </li>
+        </>
       )}
     </ul>
   );

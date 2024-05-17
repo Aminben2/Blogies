@@ -8,12 +8,13 @@ const {
   updateProfilePic,
   updateProfileCover,
 } = require("../controllers/userControler");
+const requireAuth = require("../middleware/requireAuth");
 
 //Get all users
 
-router.get("/:id", getUser);
+router.get("/", requireAuth, getAllusers);
 
-router.get("/", getAllusers);
+router.get("/:id", requireAuth, getUser);
 
 // login
 router.post("/login", userLogin);
@@ -21,8 +22,8 @@ router.post("/login", userLogin);
 //sign up
 router.post("/signup", userSignup);
 
-router.patch("/:id/profilePic", updateProfilePic);
+router.patch("/:id/profilePic", requireAuth, updateProfilePic);
 
-router.patch("/:id/profileCover", updateProfileCover);
+router.patch("/:id/profileCover", requireAuth, updateProfileCover);
 
 module.exports = router;

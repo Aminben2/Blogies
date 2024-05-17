@@ -57,7 +57,7 @@ const addComment = async (req, res) => {
   );
   if (!blog) return res.status(404).json({ error: "No such blog" });
 
-  if (!req.body.userId === blog.userId) {
+  if (req.user._id !== blog.userId) {
     const userCmnt = await userModel.findOne({ _id: req.body.userId });
     if (!userCmnt)
       return res.status(500).json({ error: "Commenting user not found" });
@@ -106,7 +106,7 @@ const addReaction = async (req, res) => {
 
     await blog.save();
 
-    if (!userId === blog.userId) {
+    if (req.user._id !== blog.userId) {
       const userCmnt = await userModel.findOne({ _id: userId });
       if (!userCmnt)
         return res.status(500).json({ error: "reacting user not found" });
@@ -200,7 +200,7 @@ const likeComment = async (req, res) => {
     // Save the updated blog document
     await blog.save();
 
-    if (!userId === blog.userId) {
+    if (req.user._id !== blog.userId) {
       const userCmnt = await userModel.findOne({ _id: userId });
       if (!userCmnt)
         return res.status(500).json({ error: "reacting user not found" });
@@ -220,6 +220,7 @@ const likeComment = async (req, res) => {
       if (!notif)
         return res.status(500).json({ error: "Could not create notif" });
     }
+
     return res
       .status(200)
       .json({ error: "Comment liked/unliked successfully" });

@@ -23,12 +23,15 @@ const contactRouter = require("./routes/contact");
 const profileRouter = require("./routes/profile");
 const categoriesRouter = require("./routes/category");
 const notificationRouter = require("./routes/notification");
+const chatRoutes = require("./routes/chat");
+const messageRoutes = require("./routes/message");
 
 // connect to database
+
 mongoose
   .connect(process.env.dbURL)
   .then(() => {
-    app.listen(process.env.PORT);
+    console.log("connected to db");
   })
   .catch((err) => console.log(err));
 app.use(express.static("public"));
@@ -80,3 +83,47 @@ app.use("/api/contact", contactRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/notification", notificationRouter);
+app.use("/api/chat", chatRoutes);
+app.use("/api/message", messageRoutes);
+
+const server = app.listen(process.env.PORT, () =>
+  console.log("Server Stated on " + process.env.PORT)
+);
+
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("Connected to Socket.io !!");
+
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+    socket.emit("connected");
+  });
+
+  socket.on("join chat", (room) => {
+    socket.join(room);
+    console.log("Room joined: " + room);
+  });
+
+  socket.on("typing", (room) => socket.in(room).emit("typing"));
+  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
+  socket.on("new message", (newMessageRecieved) => {
+    let chat = newMessageRecieved.chat;
+    if (!chat.users) return console.log("chat.users not found !!");
+    chat.users.forEach((user) => {
+      if (user._id == newMessageRecieved.sender._id) return;
+      socket.in(user._id).emit("message received", newMessageRecieved);
+    });
+  });
+
+  socket.off("setup", () => {
+    console.log("USER DISCONNECTED !");
+    socket.leave(userData._id);
+  });
+});

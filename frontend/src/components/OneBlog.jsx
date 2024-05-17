@@ -145,7 +145,7 @@ export default function OneBlog(props) {
         </button>
 
         <NavLink
-          to={props._id.toString()}
+          to={"/blogs/" + props._id.toString()}
           className="flex items-center justify-center gap-1"
         >
           <span className="dark:text-gray-100 font-bold">Comment</span>

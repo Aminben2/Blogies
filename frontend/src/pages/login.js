@@ -64,15 +64,13 @@ const Login = () => {
   const mode = useSelector((state) => state.theme);
   return (
     <div className="bg-gray-100 dark:bg-gray-700 flex justify-center items-center h-screen">
-      <div className="flex bg-white dark:bg-gray-800 flex-row justify-center items-center w-1/2 h-full ">
+      <div className="flex max-lg:hidden bg-white dark:bg-gray-800 flex-row justify-center items-center w-1/2 h-full ">
         <img
           src={mode ? "./imgs/logo-bebo-light.png" : "./imgs/logo-bebo.png"}
           alt="Placeholder"
           className="w-1/2"
         />
-        <h1 className="text-green-500 -ms-8 font-extrabold text-7xl">
-          logies
-        </h1>
+        <h1 className="text-green-500 -ms-8 font-extrabold text-7xl">logies</h1>
       </div>
       <div className="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2">
         <h1 className="text-2xl font-semibold mb-4 dark:text-gray-100">

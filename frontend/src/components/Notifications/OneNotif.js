@@ -3,7 +3,7 @@ import { formatDistanceToNow } from "date-fns";
 import { updateNotificationSeen } from "../../store/NotificationsSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-function OneNotif({ _id, from, subject, timestamp, seen }) {
+function OneNotif({ _id, subject, title, seen, createdAt }) {
   const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
@@ -35,13 +35,13 @@ function OneNotif({ _id, from, subject, timestamp, seen }) {
   return (
     <li
       onClick={markSeen}
-      className={`py-4 px-4 flex items-center relative hover:bg-blue-50 ${
-        !seen && "bg-blue-50 hover:bg-blue-100"
+      className={`py-4 px-4 flex items-center relative hover:bg-green-50 ${
+        !seen && "bg-green-50 hover:bg-green-100"
       } text-black text-sm cursor-pointer`}
     >
       {!seen && (
         <div className="absolute top-1/2 right-3 transform -translate-y-1/2">
-          <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+          <div className="w-2 h-2 bg-green-600 rounded-full"></div>
         </div>
       )}
       <img
@@ -49,12 +49,10 @@ function OneNotif({ _id, from, subject, timestamp, seen }) {
         className="w-12 h-12 rounded-full shrink-0"
       />
       <div className="ml-6">
-        <h3 className="text-sm text-[#333] font-semibold">
-          new message from {from}
-        </h3>
+        <h3 className="text-sm text-[#333] font-semibold">{title}</h3>
         <p className="text-xs text-gray-400 mt-2">{subject}</p>
-        <p className="text-xs text-blue-500 leading-3 mt-2">
-          {formatTimestamp(timestamp)}
+        <p className="text-xs text-green-600 leading-3 mt-2">
+          {formatTimestamp(createdAt)}
         </p>
       </div>
     </li>

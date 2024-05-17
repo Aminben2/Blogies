@@ -56,7 +56,6 @@ const NotificationList = ({ show, setShow }) => {
       console.log(dataRes.error);
     }
   };
-  console.log(notifications);
   return (
     <div className="absolute shadow-lg bg-white py-2 z-[1000] min-w-full rounded-lg w-[410px] max-h-[500px] overflow-auto top-11 right-0">
       <div className="flex justify-between p-4 border-b border-b-gray-300">
@@ -107,10 +106,7 @@ const NotificationList = ({ show, setShow }) => {
           <InfoAlert msg={"No notifications"} />
         </ul>
       )}
-      <Link
-        to="/notifications"
-        className="text-sm px-4 mt-6 mb-4 inline-block text-gray-600 cursor-pointer"
-      >
+      <Link className="text-sm px-4 mt-6 mb-4 inline-block text-gray-600 cursor-pointer">
         View all Notifications
       </Link>
     </div>

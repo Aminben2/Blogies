@@ -84,6 +84,7 @@ export const Blog = () => {
     }
     setComment("");
   };
+
   return (
     <>
       {isLoadigOnePost ? (

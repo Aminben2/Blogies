@@ -2,7 +2,7 @@ const Notification = require("../models/notificationModal");
 
 const getUserNotifications = async (req, res) => {
   try {
-    const notifs = await Notification.find({ to: req.user._id });
+    const notifs = await Notification.find({ postOwner: req.user._id });
     res.status(200).json(notifs);
   
   } catch (error) {
@@ -12,7 +12,7 @@ const getUserNotifications = async (req, res) => {
 
 const deleteAllUserNotifications = async (req, res) => {
   try {
-    const notifs = await Notification.deleteMany({ to: req.user._id });
+    const notifs = await Notification.deleteMany({ postOwner: req.user._id });
     res.status(200).json(notifs);
   } catch (error) {
     return res.status(500).json({ error: error.message });

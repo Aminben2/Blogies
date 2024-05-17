@@ -21,7 +21,13 @@ const userSignup = async (req, res) => {
 
     // create token for user
     const token = createToken(user._id);
-    res.status(200).json({ _id: user._id, token });
+    res.status(200).json({
+      _id: user._id,
+      token,
+      username: user.username,
+      email: user.email,
+      img: user.img,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -36,14 +42,33 @@ const userLogin = async (req, res) => {
     // create token
     const token = createToken(user._id);
 
-    res.status(200).json({ _id: user._id, token });
+    res
+      .status(200)
+      .json({
+        _id: user._id,
+        token,
+        username: user.username,
+        email: user.email,
+        img: user.img,
+      });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
 const getAllusers = async (req, res) => {
-  const users = await User.find();
+  const searchRegex = new RegExp(req.query.search, "i");
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { firstName: { $regex: searchRegex } },
+          { lastName: { $regex: searchRegex } },
+          { username: { $regex: searchRegex } },
+          { email: { $regex: searchRegex } },
+        ],
+      }
+    : {};
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
 
   if (!users) {
     return res.status(500).json({ error: "Users not found" });
@@ -51,6 +76,7 @@ const getAllusers = async (req, res) => {
 
   res.status(200).json(users);
 };
+
 const getUser = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {

@@ -144,9 +144,6 @@ export const Profile = () => {
   const blogs = posts.map((blog) => {
     return (
       <section key={blog._id} className="post one dark:bg-gray-800 relative">
-        {/* {showEditBlogForm && (
-          <div className="fixed top-0 left-0 w-full h-full backdrop-blur z-50 "></div>
-        )} */}
         {showConfimrModel && blog._id === activeBlog && (
           <WarningModal
             confirm={() => deleteBlog(blog._id)}
@@ -253,7 +250,6 @@ export const Profile = () => {
         </p>
         <div className="author">
           <AuthorPost userId={blog.userId} />
-          {/* <Bar {...blog} /> */}
         </div>
         <div className="comments flex flex-row dark:bg-gray-600 transition duration-300">
           {blog.ifCommentsEnabaled ? (
@@ -321,7 +317,7 @@ export const Profile = () => {
                         key={ele._id}
                         {...ele}
                         postId={blog._id}
-                        author={user._id === ele.userId ? "true" : "false"}
+                        author={user._id === blog.userId ? "true" : "false"}
                         isLoved={blog.ifCommentsEnabaled}
                       />
                     ))}
@@ -333,7 +329,7 @@ export const Profile = () => {
                         key={ele._id}
                         {...ele}
                         postId={blog._id}
-                        author={user._id === ele.userId ? "true" : "false"}
+                        author={user._id === ele.userId}
                         isLoved={blog.ifCommentsEnabaled}
                       />
                     ))}
