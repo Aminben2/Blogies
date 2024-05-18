@@ -36,12 +36,13 @@ function OneNotif({ _id, subject, title, seen, createdAt }) {
     <li
       onClick={markSeen}
       className={`py-4 px-4 flex items-center relative hover:bg-green-50 ${
-        !seen && "bg-green-50 hover:bg-green-100"
+        !seen &&
+        "bg-green-50 hover:bg-green-100 dark:bg-gray-700 dark:hover:bg-gray-800 "
       } text-black text-sm cursor-pointer`}
     >
       {!seen && (
         <div className="absolute top-1/2 right-3 transform -translate-y-1/2">
-          <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+          <div className="w-2 h-2 bg-green-600 rounded-full dark:bg-green-500"></div>
         </div>
       )}
       <img
@@ -49,9 +50,13 @@ function OneNotif({ _id, subject, title, seen, createdAt }) {
         className="w-12 h-12 rounded-full shrink-0"
       />
       <div className="ml-6">
-        <h3 className="text-sm text-[#333] font-semibold">{title}</h3>
-        <p className="text-xs text-gray-400 mt-2">{subject}</p>
-        <p className="text-xs text-green-600 leading-3 mt-2">
+        <h3 className="text-sm text-[#333] font-semibold dark:text-white">
+          {title}
+        </h3>
+        <p className="text-xs text-gray-400 dark:text-gray-300 mt-2">
+          {subject}
+        </p>
+        <p className="text-xs text-green-600 leading-3 dark:text-green-500 mt-2">
           {formatTimestamp(createdAt)}
         </p>
       </div>

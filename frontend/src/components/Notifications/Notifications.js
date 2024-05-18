@@ -57,11 +57,11 @@ const NotificationList = ({ show, setShow }) => {
     }
   };
   return (
-    <div className="absolute shadow-lg bg-white py-2 z-[1000] min-w-full rounded-lg w-[410px] max-h-[500px] overflow-auto top-11 right-0">
-      <div className="flex justify-between p-4 border-b border-b-gray-300">
-        <h2 className="text-green-600 font-extrabold text-xl">Notifications</h2>
+    <div className="absolute shadow-lg bg-white dark:bg-gray-700 py-2 z-[1000] min-w-full rounded-lg w-[410px] max-h-[500px] overflow-auto top-11 right-0">
+      <div className="flex justify-between p-4 border-b border-b-gray-300 dark:border-b-gray-600">
+        <h2 className="text-green-600 font-extrabold text-xl dark:text-green-500">Notifications</h2>
         <div
-          className=" text-gray-900 text-right cursor-pointer"
+          className=" text-gray-900 text-right cursor-pointer dark:text-gray-100"
           onClick={() => setShow(false)}
         >
           <i className="fa-solid fa-x"></i>
@@ -70,13 +70,13 @@ const NotificationList = ({ show, setShow }) => {
       <div className="flex items-center justify-between my-4 px-4">
         <span
           onClick={clearAll}
-          className="text-xs text-gray-900 cursor-pointer"
+          className="text-xs text-gray-900 cursor-pointer dark:text-gray-100"
         >
           Clear all
         </span>
         <span
           onClick={markSeenAll}
-          className="text-xs text-gray-900 cursor-pointer"
+          className="text-xs text-gray-900 cursor-pointer dark:text-gray-100"
         >
           Mark all as read
         </span>
@@ -106,7 +106,7 @@ const NotificationList = ({ show, setShow }) => {
           <InfoAlert msg={"No notifications"} />
         </ul>
       )}
-      <Link className="text-sm px-4 mt-6 mb-4 inline-block text-gray-600 cursor-pointer">
+      <Link className="text-sm px-4 mt-6 mb-4 inline-block text-gray-600 cursor-pointer dark:text-gray-100">
         View all Notifications
       </Link>
     </div>

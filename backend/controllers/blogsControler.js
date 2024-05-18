@@ -207,7 +207,7 @@ const likeComment = async (req, res) => {
 
       const postOwnner = await userModel.findOne({ _id: blog.userId });
       if (!postOwnner)
-        return res.status(500).json({ error: "reacting user not found" });
+        return res.status(500).json({ error: "post owner not found" });
 
       const notif = await Notification.create({
         postOwner: blog.userId,
@@ -259,6 +259,27 @@ const addReply = async (req, res) => {
 
     // Save the updated blog post document
     await blog.save();
+
+    if (userId !== comment.userId) {
+      const replyingUser = await userModel.findOne({ _id: userId });
+      if (!replyingUser)
+        return res.status(500).json({ error: "replying user not found" });
+
+      const postOwnner = await userModel.findOne({ _id: blog.userId });
+      if (!postOwnner)
+        return res.status(500).json({ error: "post owner not found" });
+
+      const notif = await Notification.create({
+        postOwner: comment.userId,
+        userId: userId,
+        postId: blog._id,
+        title: `${replyingUser.username} replied on your comment`,
+        subject: `${replyingUser.username} replied on your comment on ${postOwnner.username}'s post`,
+      });
+
+      if (!notif)
+        return res.status(500).json({ error: "Could not create notif" });
+    }
 
     res.status(200).json(blog);
   } catch (error) {

@@ -298,10 +298,11 @@ export const Comment = (props) => {
           {props.replies.length >= 1 && (
             <div className="pl-6">
               <span
-                className="font-bold text-sm cursor-pointer "
+                className="font-bold text-sm cursor-pointer  dark:text-gray-100"
                 onClick={() => setShowReplies((pre) => !pre)}
               >
-                ---- {showReplies ? "hide" : "show"} replies ({props.replies.length})
+                ---- {showReplies ? "hide" : "show"} replies (
+                {props.replies.length})
               </span>
             </div>
           )}
