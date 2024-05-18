@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateProfilePic } from "../store/usersSlice";
 
 function EditProfilePicForm({ closePopup, userId }) {
+  const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
@@ -33,6 +34,7 @@ function EditProfilePicForm({ closePopup, userId }) {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({ imageUrl: imagesUrl[0] }),
       }
@@ -48,7 +50,6 @@ function EditProfilePicForm({ closePopup, userId }) {
   const uploadImage = async () => {
     const formData = new FormData();
     formData.append("files", file); // Assuming the file input is named 'image'
-
     try {
       const response = await fetch("http://localhost:4000/upload", {
         method: "POST",
@@ -59,7 +60,6 @@ function EditProfilePicForm({ closePopup, userId }) {
       return data.url;
     } catch (error) {
       console.error("Error uploading image:", error);
-
       return null;
     }
   };
@@ -69,7 +69,10 @@ function EditProfilePicForm({ closePopup, userId }) {
       onClick={closePopup}
       className="fixed inset-0 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm z-50 flex items-center justify-center"
     >
-      <div className="flex flex-col gap-3 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-gray-900 p-3 rounded-lg shadow-lg dark:bg-gray-800">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="flex flex-col gap-3 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white text-gray-900 p-3 rounded-lg shadow-lg dark:bg-gray-800"
+      >
         <div className="flex justify-between items-center">
           <h1 className="text-lg font-bold dark:text-gray-100">
             Update your picture

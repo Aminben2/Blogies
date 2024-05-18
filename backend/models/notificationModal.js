@@ -24,16 +24,6 @@ const NotificationSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    type: {
-      type: String,
-      enum: [
-        "msg",
-        "postReaction",
-        "commnetReaction",
-        "comment",
-        "commentRelpy",
-      ],
-    },
   },
   { timestamps: true }
 );

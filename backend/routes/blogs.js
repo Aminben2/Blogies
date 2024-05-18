@@ -10,6 +10,7 @@ const {
   removeReaction,
   getReactions,
   likeComment,
+  addReply,
 } = require("../controllers/blogsControler");
 const requireAuth = require("../middleware/requireAuth");
 
@@ -22,6 +23,8 @@ router.get("/:id/reactions", getReactions);
 router.post("/", AddBlog);
 
 router.get("/", getAllBlogs);
+
+router.patch("/addReply", addReply);
 
 router.patch("/:id", addComment);
 

@@ -230,6 +230,44 @@ const likeComment = async (req, res) => {
   }
 };
 
+const addReply = async (req, res) => {
+  try {
+    const { commentId, postId, reply, replyTo } = req.body;
+    const userId = req.user._id;
+
+    // Find the blog post by ID
+    const blog = await Blogs.findById(postId);
+    if (!blog) {
+      return res.status(404).json({ error: "Blog post not found" });
+    }
+
+    // Find the comment by ID within the blog post's comments array
+    const comment = blog.comments.id(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    // Create a new reply object
+    const newReply = {
+      userId,
+      reply,
+      replyTo,
+    };
+
+    // Add the new reply to the replies array
+    comment.replies.push(newReply);
+
+    // Save the updated blog post document
+    await blog.save();
+
+    res.status(200).json(blog);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { addReply };
+
 module.exports = {
   getAllBlogs,
   getOneBlog,
@@ -239,4 +277,5 @@ module.exports = {
   removeReaction,
   getReactions,
   likeComment,
+  addReply,
 };

@@ -115,6 +115,7 @@ function UpdatePostForm(props) {
       className="fixed top-0 left-0 w-full h-full backdrop-blur z-50 "
     >
       <form
+        onClick={(e) => e.stopPropagation()}
         onSubmit={handleSubmit}
         className="editForm flex flex-col rounded-lg border border-gray-300 dark:border-0 shadow-xl fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >

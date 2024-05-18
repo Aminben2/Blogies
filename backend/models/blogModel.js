@@ -19,6 +19,26 @@ const commentLikesSchema = new Schema({
   },
 });
 
+const commentRepliesSchema = new Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    reply: {
+      type: String,
+      required: true,
+    },
+    replyTo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
 const commentSchema = new Schema(
   {
     userId: {
@@ -39,6 +59,10 @@ const commentSchema = new Schema(
     },
     likes: {
       type: [commentLikesSchema],
+      default: [],
+    },
+    replies: {
+      type: [commentRepliesSchema],
       default: [],
     },
   },

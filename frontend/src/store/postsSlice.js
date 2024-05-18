@@ -135,7 +135,15 @@ const postSlice = createSlice({
         }
       }
     },
-
+    addReply: (state, action) => {
+      const { userId, reply, commentId, replyTo } = action.payload;
+      const existingComment = state.onePost.comments.find(
+        (c) => c._id === commentId
+      );
+      if (existingComment) {
+        existingComment.replies.push({ userId, reply, replyTo });
+      }
+    },
     removeReaction(state, action) {
       const { postId, userId } = action.payload;
       const existingPostIndex = state.posts.findIndex(
@@ -335,5 +343,6 @@ export const {
   removePrevReaction,
   likeComment,
   unlikeComment,
+  addReply,
 } = postSlice.actions;
 export default postSlice;

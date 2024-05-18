@@ -4,7 +4,7 @@ export const getUsers = createAsyncThunk("users/getUsers", async () => {
   const user = JSON.parse(localStorage.getItem("login"));
 
   try {
-    const response = await fetch("http://localhost:4000/api/users", {
+    const response = await fetch("http://localhost:4000/api/users/all", {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${user.token}`,
@@ -21,15 +21,17 @@ export const getUsers = createAsyncThunk("users/getUsers", async () => {
   }
 });
 export const getUser = createAsyncThunk("users/getUser", async (id) => {
-  const user = JSON.parse(localStorage.getItem("login"));
-
+  const loggeduser = JSON.parse(localStorage.getItem("login"));
   try {
-    const response = await fetch(`http://localhost:4000/api/users/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
-      },
-    });
+    const response = await fetch(
+      `http://localhost:4000/api/users/oneUser/${id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loggeduser.token}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Could NOT fetch user from api");
@@ -37,6 +39,7 @@ export const getUser = createAsyncThunk("users/getUser", async (id) => {
     const user = await response.json();
     return user;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 });

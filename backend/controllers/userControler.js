@@ -42,20 +42,26 @@ const userLogin = async (req, res) => {
     // create token
     const token = createToken(user._id);
 
-    res
-      .status(200)
-      .json({
-        _id: user._id,
-        token,
-        username: user.username,
-        email: user.email,
-        img: user.img,
-      });
+    res.status(200).json({
+      _id: user._id,
+      token,
+      username: user.username,
+      email: user.email,
+      img: user.img,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    return res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).json({ error: "Users not found" });
+  }
+};
 const getAllusers = async (req, res) => {
   const searchRegex = new RegExp(req.query.search, "i");
   const keyword = req.query.search
@@ -133,4 +139,5 @@ module.exports = {
   getUser,
   updateProfilePic,
   updateProfileCover,
+  getUsers,
 };

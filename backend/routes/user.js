@@ -7,6 +7,7 @@ const {
   getUser,
   updateProfilePic,
   updateProfileCover,
+  getUsers,
 } = require("../controllers/userControler");
 const requireAuth = require("../middleware/requireAuth");
 
@@ -14,7 +15,9 @@ const requireAuth = require("../middleware/requireAuth");
 
 router.get("/", requireAuth, getAllusers);
 
-router.get("/:id", requireAuth, getUser);
+router.get("/all", requireAuth, getUsers);
+
+router.get("/oneUser/:id", requireAuth, getUser);
 
 // login
 router.post("/login", userLogin);

@@ -60,8 +60,10 @@ const upload = multer({ storage: storage });
 
 // Endpoint for multiple file uploads
 app.post("/upload", upload.array("files", 10), (req, res) => {
-  // You can access the file information through req.files
-  // Perform any necessary processing or validation here
+  // Everything went fine.
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: "No files were uploaded." });
+  }
   const filenames = req.files.map((file) => file.filename);
   res.status(200).json({ url: filenames });
 });

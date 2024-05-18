@@ -317,8 +317,8 @@ export const Profile = () => {
                         key={ele._id}
                         {...ele}
                         postId={blog._id}
-                        author={user._id === blog.userId ? "true" : "false"}
-                        isLoved={blog.ifCommentsEnabaled}
+                        author={ele.userId === blog.userId}
+                        isLoved={blog.loved}
                       />
                     ))}
                   {blog.comments
@@ -329,8 +329,8 @@ export const Profile = () => {
                         key={ele._id}
                         {...ele}
                         postId={blog._id}
-                        author={user._id === ele.userId}
-                        isLoved={blog.ifCommentsEnabaled}
+                        author={ele.userId === blog.userId}
+                        isLoved={blog.loved}
                       />
                     ))}
                 </>
