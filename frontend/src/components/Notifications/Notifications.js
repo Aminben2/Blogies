@@ -59,7 +59,9 @@ const NotificationList = ({ show, setShow }) => {
   return (
     <div className="absolute shadow-lg bg-white dark:bg-gray-700 py-2 z-[1000] min-w-full rounded-lg w-[410px] max-h-[500px] overflow-auto top-11 right-0">
       <div className="flex justify-between p-4 border-b border-b-gray-300 dark:border-b-gray-600">
-        <h2 className="text-green-600 font-extrabold text-xl dark:text-green-500">Notifications</h2>
+        <h2 className="text-green-600 font-extrabold text-xl dark:text-green-500">
+          Notifications
+        </h2>
         <div
           className=" text-gray-900 text-right cursor-pointer dark:text-gray-100"
           onClick={() => setShow(false)}
@@ -86,13 +88,13 @@ const NotificationList = ({ show, setShow }) => {
           {notifications
             .slice() // Create a shallow copy of the notifications array to avoid mutating the original array
             .sort((a, b) => {
-              // Sort notifications by timestamp in descending order
-              if (a.timestamp < b.timestamp) return 1;
-              if (a.timestamp > b.timestamp) return -1;
-
-              // If timestamps are equal, sort unseen notifications above seen notifications
+              // Sort unseen notifications above seen notifications
               if (!a.seen && b.seen) return -1;
               if (a.seen && !b.seen) return 1;
+
+              // If both are either seen or unseen, sort by timestamp in descending order
+              if (a.timestamp < b.timestamp) return 1;
+              if (a.timestamp > b.timestamp) return -1;
 
               // If timestamps and seen statuses are equal, maintain the current order
               return 0;

@@ -16,6 +16,7 @@ function Header() {
   const switchMode = () => {
     dispatch(switchTheme());
   };
+
   const { notifications } = useSelector((state) => state.notifications);
 
   useEffect(() => {
