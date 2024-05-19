@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 const MyChats = ({ fetchAgain }) => {
   const darkMode = useSelector((state) => state.theme);
   const loggedUser = useSelector((state) => state.auth);
-  const { selectedChat, setSelectedChat, user, chats, setChats } =
+  const { selectedChat, setSelectedChat, user, chats, setChats, setNewNotifs } =
     useChatState();
   const toast = useToast();
   const fetchChats = async () => {
@@ -40,6 +40,31 @@ const MyChats = ({ fetchAgain }) => {
   useEffect(() => {
     fetchChats();
   }, [fetchAgain]);
+
+  const deleteNotifications = async (chatId) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          "Content-Type": "application/json",
+        },
+      };
+
+      await axios.delete("http://localhost:4000/api/users/notifications", {
+        data: { chatId },
+        ...config,
+      });
+
+      // Optionally update the local state to remove the notifications
+      setNewNotifs((prevNotifications) =>
+        prevNotifications.filter(
+          (notification) => notification.chatId !== chatId
+        )
+      );
+    } catch (error) {
+      console.error("Failed to delete notifications:", error);
+    }
+  };
   return (
     <Box
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
@@ -94,7 +119,10 @@ const MyChats = ({ fetchAgain }) => {
           <Stack overflowY="scroll">
             {chats.map((chat) => (
               <Box
-                onClick={() => setSelectedChat(chat)}
+                onClick={() => {
+                  deleteNotifications(chat._id);
+                  setSelectedChat(chat);
+                }}
                 cursor="pointer"
                 bg={
                   selectedChat === chat

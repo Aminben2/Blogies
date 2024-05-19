@@ -3,6 +3,17 @@ const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 const validator = require("validator");
 
+const notificationSchema = new mongoose.Schema(
+  {
+    type: String,
+    message: String,
+    chatId: { type: mongoose.Schema.Types.ObjectId, ref: "Chat" },
+    senderId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    isRead: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
+
 const userSchema = new Schema({
   username: {
     type: String,
@@ -34,6 +45,7 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
+  notifications: [notificationSchema],
 });
 
 userSchema.statics.login = async function (username, password) {
