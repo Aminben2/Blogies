@@ -132,6 +132,239 @@ const updateProfileCover = async (req, res) => {
   res.status(200).json(user);
 };
 
+const updateContactInfo = async (req, res) => {
+  try {
+    const { contactInfo, dateOfBirth } = req.body;
+
+    // Validate the date format if necessary
+    if (dateOfBirth && !validator.isDate(dateOfBirth)) {
+      return res.status(400).json({ error: "Invalid date format" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $set: {
+          "contactInfo.phone": contactInfo.phone,
+          "contactInfo.address": contactInfo.address,
+          "contactInfo.website": contactInfo.website,
+          dateOfBirth: dateOfBirth,
+        },
+      },
+      { new: true, runValidators: true } // returns the updated document
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const deleteAllNotifs = async (req, res) => {
+  const { chatId } = req.body;
+
+  if (!chatId) {
+    return res.status(400).json({ error: "Chat ID is required" });
+  }
+
+  try {
+    await User.updateOne(
+      { _id: req.user._id },
+      { $pull: { notifications: { chatId: chatId } } }
+    );
+    res.status(200).json({ message: "Notifications deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const userNotifications = async (req, res) => {
+  try {
+    const userId = req.user._id; // Assume user ID is available in req.user
+    const user = await User.findById(userId).populate(
+      "notifications.senderId",
+      "username"
+    );
+    res.status(200).json(user.notifications);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const addWork = async (req, res) => {
+  try {
+    const { company, position, startDate, endDate, current, desc } = req.body;
+
+    // Validate required fields
+    if (!company || !position || !startDate || !desc) {
+      return res
+        .status(400)
+        .json({ message: "Company, position, and startDate are required" });
+    }
+
+    // Create the new work experience object
+    const newWork = {
+      company,
+      position,
+      startDate,
+      endDate,
+      current: !endDate ? true : false,
+      desc,
+    };
+
+    // Find the user and add the new work experience
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user_.id,
+      { $push: { work: newWork } },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const deleteWork = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    // Find the user and pull the work experience by id
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { work: { _id: id } } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const addEducation = async (req, res) => {
+  try {
+    const { school, degree, fieldOfStudy, startDate, endDate, current, desc } =
+      req.body;
+
+    // Validate required fields
+    if (!school || !degree || !startDate || !fieldOfStudy || !desc) {
+      return res
+        .status(400)
+        .json({ error: "School, degree, and startDate are required" });
+    }
+
+    // Create the new education entry object
+    const newEducation = {
+      school,
+      degree,
+      fieldOfStudy,
+      startDate,
+      endDate: !endDate ? true : false,
+      current,
+      desc,
+    };
+
+    // Find the user and add the new education entry
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { $push: { education: newEducation } },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const deleteEducation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    // Find the user and pull the education entry by id
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { education: { _id: id } } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const updateBio = async (req, res) => {
+  try {
+    const { bio } = req.body;
+
+    if (!bio) {
+      return res.status(400).json({ error: "Bio is required" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: { bio: bio } },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const updatePersonnalInfo = async (req, res) => {
+  try {
+    const { username, firstName, lastName } = req.body;
+
+    // Validate required fields
+    if (!username || !firstName || !lastName) {
+      return res
+        .status(400)
+        .json({ error: "Username, firstName, and lastName are required" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: { username, firstName, lastName } },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 module.exports = {
   userLogin,
   userSignup,
@@ -140,4 +373,13 @@ module.exports = {
   updateProfilePic,
   updateProfileCover,
   getUsers,
+  updateContactInfo,
+  deleteAllNotifs,
+  userNotifications,
+  addWork,
+  deleteWork,
+  addEducation,
+  deleteEducation,
+  updateBio,
+  updatePersonnalInfo,
 };

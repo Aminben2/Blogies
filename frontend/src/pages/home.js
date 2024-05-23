@@ -6,13 +6,13 @@ import LatestBlogs from "../components/LatestBlogs/LatestBlogs";
 import Testimonials from "../components/Testimonials/Testimonials";
 import Team from "../components/Team/Team";
 
-export const Home = () => {
+export const Home = ({ setShowLogin }) => {
   return (
     <div className="">
       <Hero />
       <Stats />
       <Feature />
-      <LatestBlogs />
+      <LatestBlogs setShowLogin={setShowLogin} />
       <Testimonials />
       <Team />
     </div>

@@ -14,6 +14,25 @@ const notificationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const workSchema = new mongoose.Schema({
+  company: String,
+  position: String,
+  startDate: Date,
+  endDate: Date,
+  current: Boolean,
+  desc: String,
+});
+
+const educationSchema = new mongoose.Schema({
+  school: String,
+  degree: String,
+  fieldOfStudy: String,
+  startDate: Date,
+  endDate: Date,
+  current: Boolean,
+  desc: String,
+});
+
 const userSchema = new Schema({
   username: {
     type: String,
@@ -41,10 +60,31 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
+  bio: {
+    type: String,
+    default: "",
+  },
+  socialLinks: {
+    facebook: { type: String, default: "" },
+    twitter: { type: String, default: "" },
+    linkedin: { type: String, default: "" },
+    instagram: { type: String, default: "" },
+  },
   cover: {
     type: String,
     default: "",
   },
+  dateOfBirth: {
+    type: Date,
+  },
+  work: [workSchema],
+  education: [educationSchema],
+  contactInfo: {
+    phone: { type: String, default: "" },
+    address: { type: String, default: "" },
+    website: { type: String, default: "" },
+  },
+
   notifications: [notificationSchema],
 });
 

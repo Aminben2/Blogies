@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import AuthorPost from "../components/authorPost";
 import { Comment } from "../components/comment";
-import OnePostLoader from "../components/onePostLoader";
+import OnePostLoader from "../components/loaders/onePostLoader";
 import { addComment, addReply, getOnePost } from "../store/postsSlice";
-import ImageLoader from "../components/ImageLoader";
+import ImageLoader from "../components/loaders/ImageLoader";
 import { getUser } from "../store/usersSlice";
 
 export const Blog = () => {

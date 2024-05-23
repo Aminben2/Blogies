@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { getUserPostsListing } from "../store/postsSlice";
-import PostLoaders from "../components/postLoaders";
-import { getUser } from "../store/usersSlice";
-import OneBlog from "../components/OneBlog";
+import { getUserPostsListing } from "../../store/postsSlice";
+import PostLoaders from "../../components/loaders/postLoaders";
+import { getUser } from "../../store/usersSlice";
+import OneBlog from "../Blogs/OneBlog";
 
 function UserProfile() {
   const navigate = useNavigate();

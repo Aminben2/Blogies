@@ -5,7 +5,7 @@ import AuthLayout from "./layouts/authLayout";
 import { NotFound } from "./pages/NotFound";
 import AddPostFrom from "./pages/addPostFrom";
 import { Blog } from "./pages/blog";
-import Blogs from "./pages/blogs";
+import Blogs from "./pages/Blogs/blogs";
 
 import {
   createBrowserRouter,
@@ -17,8 +17,8 @@ import { Home } from "./pages/home";
 import Contact from "./pages/Contact";
 import Login from "./pages/login";
 import { Signup } from "./pages/signup";
-import Profile from "./pages/Profile";
-import UserProfile from "./pages/UserProfile";
+import Profile from "./pages/Profile/Profile";
+import UserProfile from "./pages/Profile/UserProfile";
 import About from "./pages/About";
 import Chats from "./pages/Chats";
 

@@ -21,6 +21,23 @@ export const getPosts = createAsyncThunk("posts/getPosts", async () => {
   }
 });
 
+export const getLatestPosts = createAsyncThunk(
+  "posts/getLatestPosts",
+  async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:4000/api/blogs/latest/all"
+      );
+      if (!response.ok) {
+        throw new Error("Could not fetch the latest posts");
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw error; // Rethrow the error to propagate it to the component
+    }
+  }
+);
 export const getOnePost = createAsyncThunk("post/getOnePost", async (id) => {
   const user = JSON.parse(localStorage.getItem("login"));
 
@@ -95,10 +112,12 @@ const postSlice = createSlice({
     userPosts: [],
     userPostsListing: [],
     prevReactions: [],
+    latestPosts: [],
     isLoading: false,
     isLoadingOnePost: false,
     isLoadingUserPosts: false,
     isLoadingUserPostsListing: false,
+    isLatestPostsLoading: false,
   },
   reducers: {
     addPost(state, action) {
@@ -267,6 +286,21 @@ const postSlice = createSlice({
         }
       }
     },
+    likeReply: (state, action) => {
+      const { commentId, userId, replyId } = action.payload;
+      const post = state.onePost;
+      if (post) {
+        const comment = post.comments.find(
+          (comment) => comment._id === commentId
+        );
+        if (comment) {
+          const reply = comment.replies.find((reply) => reply._id === replyId);
+          if (reply) {
+            reply.likes.push({ userId });
+          }
+        }
+      }
+    },
     unlikeComment(state, action) {
       const { commentId, userId } = action.payload;
       const post = state.onePost;
@@ -278,6 +312,21 @@ const postSlice = createSlice({
           comment.likes = comment.likes.filter(
             (like) => like.userId !== userId
           );
+        }
+      }
+    },
+    unlikeReply(state, action) {
+      const { commentId, userId, replyId } = action.payload;
+      const post = state.onePost;
+      if (post) {
+        const comment = post.comments.find(
+          (comment) => comment._id === commentId
+        );
+        if (comment) {
+          const reply = comment.replies.find((reply) => reply._id === replyId);
+          if (reply) {
+            reply.likes = reply.likes.filter((rep) => rep.userId !== userId);
+          }
         }
       }
     },
@@ -323,6 +372,16 @@ const postSlice = createSlice({
       })
       .addCase(getUserPostsListing.rejected, (state) => {
         state.isLoadingUserPostsListing = false;
+      })
+      .addCase(getLatestPosts.pending, (state) => {
+        state.isLatestPostsLoading = true;
+      })
+      .addCase(getLatestPosts.fulfilled, (state, action) => {
+        state.isLatestPostsLoading = false;
+        state.latestPosts = action.payload;
+      })
+      .addCase(getLatestPosts.rejected, (state) => {
+        state.isLatestPostsLoading = false;
       });
   },
 });
@@ -344,5 +403,7 @@ export const {
   likeComment,
   unlikeComment,
   addReply,
+  likeReply,
+  unlikeReply,
 } = postSlice.actions;
 export default postSlice;

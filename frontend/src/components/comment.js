@@ -295,18 +295,24 @@ export const Comment = (props) => {
               </div>
             </div>
           </div>
-          {props.replies.length >= 1 && (
+          {props.replies?.length >= 1 && (
             <div className="pl-6">
               <span
                 className="font-bold text-sm cursor-pointer  dark:text-gray-100"
                 onClick={() => setShowReplies((pre) => !pre)}
               >
                 ---- {showReplies ? "hide" : "show"} replies (
-                {props.replies.length})
+                {props.replies?.length})
               </span>
             </div>
           )}
-          {showReplies && <Replies replies={props.replies} />}
+          {showReplies && (
+            <Replies
+              replies={props.replies}
+              postId={props.postId}
+              commentId={props._id}
+            />
+          )}
         </div>
       )}
     </>

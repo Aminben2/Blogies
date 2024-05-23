@@ -299,6 +299,66 @@ const addReply = async (req, res) => {
   }
 };
 
+const likeReply = async (req, res) => {
+  const { blogId, commentId, replyId } = req.params;
+  const userId = req.user._id; // Assuming you have authentication middleware
+
+  try {
+    const blog = await Blogs.findById(blogId);
+    if (!blog) {
+      return res.status(404).json({ ErrorEvent: "Blog not found" });
+    }
+
+    const comment = blog.comments.id(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    const reply = comment.replies.id(replyId);
+    if (!reply) {
+      return res.status(404).json({ error: "Reply not found" });
+    }
+
+    // Check if the user already liked the reply
+    const likedIndex = reply.likes.findIndex((like) => like.userId == userId);
+    if (likedIndex !== -1) {
+      // User already liked the reply, so unlike it
+      reply.likes.splice(likedIndex, 1);
+    } else {
+      // User has not liked the reply, so like it
+      reply.likes.push({ userId });
+    }
+
+    await blog.save();
+
+    if (userId != comment.userId && userId != reply.userId) {
+      const userReplyLike = await userModel.findOne({ _id: userId });
+      if (!userReplyLike)
+        return res.status(500).json({ error: "reacting user not found" });
+
+      const postOwner = await userModel.findOne({ _id: blog.userId });
+      if (!postOwner)
+        return res.status(500).json({ error: "post owner not found" });
+
+      const notif = await Notification.create({
+        postOwner: reply.userId,
+        userId: userId,
+        postId: blog._id,
+        title: `your reply got a like`,
+        subject: `${userReplyLike.username} liked your reply on ${postOwner.username}'s post`,
+      });
+
+      if (!notif)
+        return res.status(500).json({ error: "Could not create notif" });
+    }
+
+    res.status(200).json({ message: "Reply liked/unliked successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
 module.exports = { addReply };
 
 module.exports = {
@@ -312,4 +372,5 @@ module.exports = {
   likeComment,
   addReply,
   getLatestBlogs,
+  likeReply,
 };

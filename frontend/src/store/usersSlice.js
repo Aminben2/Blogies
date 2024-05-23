@@ -21,16 +21,9 @@ export const getUsers = createAsyncThunk("users/getUsers", async () => {
   }
 });
 export const getUser = createAsyncThunk("users/getUser", async (id) => {
-  const loggeduser = JSON.parse(localStorage.getItem("login"));
   try {
     const response = await fetch(
-      `http://localhost:4000/api/users/oneUser/${id}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${loggeduser.token}`,
-        },
-      }
+      `http://localhost:4000/api/users/oneUser/${id}`
     );
 
     if (!response.ok) {

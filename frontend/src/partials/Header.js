@@ -31,7 +31,6 @@ function Header({ setShowLogin }) {
           "http://localhost:4000/validate-token",
           { token: user.token }
         );
-        console.log(response.data.valid);
         if (!response.data.valid) {
           return;
         }

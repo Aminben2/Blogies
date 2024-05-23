@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import AuthorPost from "./authorPost";
-import Bar from "./Bar";
+import AuthorPost from "../../components/authorPost";
+import Bar from "../../components/Bar";
 import { useDispatch, useSelector } from "react-redux";
 import { formatDistanceToNow } from "date-fns";
-import { removePrevReaction } from "../store/postsSlice";
+import { removePrevReaction } from "../../store/postsSlice";
 
 export default function OneBlog(props) {
   const dispatch = useDispatch();
@@ -37,6 +37,7 @@ export default function OneBlog(props) {
     };
     getReactions(props._id);
   }, [dispatch, props._id, user]);
+
   useEffect(() => {
     const reactObj = prevReactions.find((r) => r.postId === props._id);
     if (reactObj) {
@@ -45,7 +46,6 @@ export default function OneBlog(props) {
   }, [prevReactions, props._id, user, userReaction]);
 
   let reactionStyle = "";
-
   let reactionIcon = "";
   switch (userReaction) {
     case "like":
@@ -68,6 +68,7 @@ export default function OneBlog(props) {
       reactionStyle = "";
       break;
   }
+
   const unReact = async (reactObj) => {
     if (!user) {
       return;
@@ -92,6 +93,7 @@ export default function OneBlog(props) {
       console.log(json.error);
     }
   };
+
   return (
     <section
       className="post border w-full border-green-500 dark:border-green-400"

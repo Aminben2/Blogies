@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import PostLoaders from "../components/postLoaders";
-import { getPosts } from "../store/postsSlice";
-import OneBlog from "../components/OneBlog";
+import PostLoaders from "../../components/loaders/postLoaders";
+import { getPosts } from "../../store/postsSlice";
+import OneBlog from "./OneBlog";
 import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -16,7 +16,6 @@ const Blogs = () => {
   useEffect(() => {
     dispatch(getPosts());
   }, [dispatch]);
-
 
   return (
     <div className="main dark:bg-gray-800 ">

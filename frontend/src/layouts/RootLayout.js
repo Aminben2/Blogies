@@ -30,7 +30,7 @@ export const RootLayout = () => {
         <LoginAlert show={showLoginModal} setShow={toggleLoginModal} />
       )}
       <Header setShowLogin={toggleLoginModal} />
-      <Outlet />
+      <Outlet setShowLogin={toggleLoginModal} />
       <Footer />
     </div>
   );

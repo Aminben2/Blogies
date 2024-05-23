@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editBlog } from "../store/postsSlice";
+import { editBlog } from "../../store/postsSlice";
 
 function UpdatePostForm(props) {
   const dispatch = useDispatch();
