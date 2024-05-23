@@ -44,6 +44,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
+    if (!user) return;
     socket = io(ENDPOINT);
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
@@ -80,11 +81,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
+    if (!user) return;
+
     fetchMessages();
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
   useEffect(() => {
+    if (!user) return;
+
     socket.on("message received", (newMessageRecieved) => {
       if (
         !selectedChatCompare ||

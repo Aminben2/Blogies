@@ -22,6 +22,18 @@ const getOneBlog = async (req, res) => {
   res.status(200).json(blog);
 };
 
+const getLatestBlogs = async (req, res) => {
+  try {
+    // Fetch the latest blogs, sorting by creation date in descending order
+    const latestBlogs = await Blogs.find().sort({ createdAt: -1 }).limit(3);
+
+    // Send the blogs in the response
+    res.status(200).json(latestBlogs);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch latest blogs" });
+  }
+};
+
 const AddBlog = async (req, res) => {
   const { title, content, userId, reactions, comments, image, category, tags } =
     req.body;
@@ -299,4 +311,5 @@ module.exports = {
   getReactions,
   likeComment,
   addReply,
+  getLatestBlogs,
 };

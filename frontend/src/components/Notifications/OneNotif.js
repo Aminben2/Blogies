@@ -35,7 +35,7 @@ function OneNotif({ _id, subject, title, seen, createdAt }) {
   return (
     <li
       onClick={markSeen}
-      className={`py-4 px-4 flex items-center relative hover:bg-green-50 ${
+      className={`py-4 px-4 flex items-center relative hover:bg-green-50 dark:hover:bg-gray-800 ${
         !seen &&
         "bg-green-50 hover:bg-green-100 dark:bg-gray-700 dark:hover:bg-gray-800 "
       } text-black text-sm cursor-pointer`}

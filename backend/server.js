@@ -6,6 +6,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const app = express();
+const JWT = require("jsonwebtoken");
 
 app.use(express.json());
 app.use(
@@ -25,6 +26,7 @@ const categoriesRouter = require("./routes/category");
 const notificationRouter = require("./routes/notification");
 const chatRoutes = require("./routes/chat");
 const messageRoutes = require("./routes/message");
+const User = require("./models/userModel");
 
 // connect to database
 
@@ -79,6 +81,26 @@ app.post("/upload", upload.array("files", 10), (req, res) => {
 
 app.use("/uploads", express.static(uploadsDirectory));
 
+// Token validation endpoint
+app.post("/validate-token", async (req, res) => {
+  const token = req.body.token;
+  try {
+    const decoded = JWT.verify(token, process.env.SECRET);
+    const user = await User.findById(decoded._id);
+    if (user) {
+      return res.status(200).json({ valid: true });
+    } else {
+      return res.status(401).json({ valid: false, message: "User not found" });
+    }
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ valid: false, message: "Token expired" });
+    } else {
+      return res.status(401).json({ valid: false, message: "Invalid token" });
+    }
+  }
+});
+
 app.use("/api/blogs", blogsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/contact", contactRouter);
@@ -103,6 +125,10 @@ io.on("connection", (socket) => {
   console.log("Connected to Socket.io !!");
 
   socket.on("setup", (userData) => {
+    if (!userData || !userData._id) {
+      console.log("Invalid user data received");
+      return; // Early return if userData is invalid
+    }
     socket.join(userData._id);
     socket.emit("connected");
   });

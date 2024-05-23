@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { switchTheme } from "../store/modeSlice";
 import UserDropDown from "../components/DropDown/UserDropDown";
 import NotificationList from "../components/Notifications/Notifications";
 import { getNotifications } from "../store/NotificationsSlice";
 import { useChatState } from "../components/Chat/context/chatProvider";
+import axios from "axios";
 
-function Header() {
+function Header({ setShowLogin }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth);
   const [isShowSideBar, setIsShowSideBar] = useState(false);
   const [isShowUserDRopDown, setShowUserDropDown] = useState(false);
   const [isShowNotifications, setIsShowNotifications] = useState(false);
+
   const isDarkMOde = useSelector((state) => state.theme);
   const switchMode = () => {
     dispatch(switchTheme());
@@ -23,6 +25,24 @@ function Header() {
 
   useEffect(() => {
     if (!user) return;
+    const verify = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:4000/validate-token",
+          { token: user.token }
+        );
+        console.log(response.data.valid);
+        if (!response.data.valid) {
+          return;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    verify();
+  }, [user]);
+  useEffect(() => {
+    if (!user) return;
     const fetchNotifications = async () => {
       dispatch(getNotifications());
     };
@@ -30,7 +50,7 @@ function Header() {
     fetchNotifications();
     const intervalId = setInterval(fetchNotifications, 5000);
     return () => clearInterval(intervalId);
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   return (
     <header className="flex shadow-sm bg-white dark:bg-gray-900 font-[sans-serif] min-h-[70px]">
@@ -144,7 +164,14 @@ function Header() {
           <div className="relative">
             <div className="relative">
               <svg
-                onClick={() => setIsShowNotifications(!isShowNotifications)}
+                onClick={
+                  user
+                    ? () => setIsShowNotifications(!isShowNotifications)
+                    : (e) => {
+                        e.preventDefault();
+                        setShowLogin();
+                      }
+                }
                 xmlns="http://www.w3.org/2000/svg"
                 width="20px"
                 className="cursor-pointer fill-[#333] dark:fill-gray-100 dark:hover:fill-green-500 hover:fill-green-500"
@@ -169,7 +196,7 @@ function Header() {
             )}
           </div>
           <div>
-            <NavLink to="/chats">
+            <NavLink to={user ? "/chats" : "/login"}>
               <div className="relative">
                 <svg
                   className="cursor-pointer fill-[#333] dark:fill-gray-100 dark:hover:fill-green-500 hover:fill-green-500"

@@ -15,6 +15,7 @@ const ChatProvider = ({ children }) => {
   const user = useSelector((state) => state.auth);
 
   useEffect(() => {
+    if (!user) return;
     const fetchNotifications = async () => {
       try {
         const { data } = await axios.get(
@@ -32,12 +33,14 @@ const ChatProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
+    if (!user) return;
     const newSocket = io(ENDPOINT);
     setSocket(newSocket);
     return () => newSocket.close();
   }, [ENDPOINT]);
 
   useEffect(() => {
+    if (!user) return;
     if (socket) {
       socket.emit("setup", user);
 

@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Outlet } from "react-router-dom";
 import Footer from "../partials/Footer";
-import { logout } from "../store/authSlice";
 import { switchTheme } from "../store/modeSlice";
 import Header from "../partials/Header";
+import LoginAlert from "../components/Alerts/LoginAlert";
 
 export const RootLayout = () => {
   const dispatch = useDispatch();
 
   const isDarkMOde = useSelector((state) => state.theme);
-  const user = useSelector((state) => state.auth);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const toggleLoginModal = () => {
+    setShowLoginModal(!showLoginModal);
+    document.body.style.overflow = showLoginModal ? "auto" : "hidden";
+  };
 
   const switchMode = () => {
     dispatch(switchTheme());
@@ -22,7 +26,10 @@ export const RootLayout = () => {
         isDarkMOde ? "dark" : ""
       }`}
     >
-      <Header />
+      {showLoginModal && (
+        <LoginAlert show={showLoginModal} setShow={toggleLoginModal} />
+      )}
+      <Header setShowLogin={toggleLoginModal} />
       <Outlet />
       <Footer />
     </div>

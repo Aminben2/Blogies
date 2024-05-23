@@ -11,27 +11,28 @@ const {
   getReactions,
   likeComment,
   addReply,
+  getLatestBlogs,
 } = require("../controllers/blogsControler");
 const requireAuth = require("../middleware/requireAuth");
 
-router.use(requireAuth);
+router.get("/:id", requireAuth, getOneBlog);
 
-router.get("/:id", getOneBlog);
+router.get("/:id/reactions", requireAuth, getReactions);
 
-router.get("/:id/reactions", getReactions);
+router.get("/", requireAuth, getAllBlogs);
 
-router.post("/", AddBlog);
+router.get("/latest/all", getLatestBlogs);
 
-router.get("/", getAllBlogs);
+router.post("/", requireAuth, AddBlog);
 
-router.patch("/addReply", addReply);
+router.patch("/addReply", requireAuth, addReply);
 
-router.patch("/:id", addComment);
+router.patch("/:id", requireAuth, addComment);
 
-router.patch("/:id/react", addReaction);
+router.patch("/:id/react", requireAuth, addReaction);
 
-router.patch("/:id/unReact", removeReaction);
+router.patch("/:id/unReact", requireAuth, removeReaction);
 
-router.patch("/:id/likeComment", likeComment);
+router.patch("/:id/likeComment", requireAuth, likeComment);
 
 module.exports = router;

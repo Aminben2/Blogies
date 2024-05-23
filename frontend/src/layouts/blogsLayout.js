@@ -1,11 +1,9 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
-
+import { Outlet } from "react-router-dom";
 
 export const BlogLayout = () => {
-    return (
-        <div className='blog-layout dark:bg-gray-900'>
-            <Outlet />
-        </div>
-    )
-}
+  return (
+    <div className="blog-layout dark:bg-gray-900">
+      <Outlet />
+    </div>
+  );
+};

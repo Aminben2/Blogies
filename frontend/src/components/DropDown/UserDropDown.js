@@ -17,7 +17,7 @@ function UserDropDown({ setShow }) {
       }}
       className="absolute -right-5 top-12 shadow-lg bg-white dark:bg-gray-700 py-2 z-[1000] min-w-full w-max rounded-lg max-h-96 overflow-auto transition-all duration-1000"
     >
-      <NavLink to="/profile" onClick={setShow}>
+      <NavLink to={user ? "/profile" : "/login"} onClick={setShow}>
         <li className="py-2.5 px-6 flex items-center hover:bg-gray-100 dark:text-gray-100 dark:hover:bg-gray-500 text-[#333] text-sm cursor-pointe r">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@ function UserDropDown({ setShow }) {
       ) : (
         <>
           <li className="py-2.5 px-6 flex items-center dark:text-gray-100 dark:hover:bg-gray-500 hover:bg-gray-100 text-[#333] text-sm cursor-pointer">
-            <Link to="/chats" className="flex items-center">
+            <Link to={user ? "/chats" : "/login"} className="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-[16px] h-[16px] mr-3 dark:fill-gray-100"

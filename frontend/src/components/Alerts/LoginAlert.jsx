@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../store/AuthSlice";
+import { login } from "../../store/authSlice";
 
 function LoginAlert({ setShow }) {
   const user = useSelector((state) => state.auth);
+  const isDarkMOde = useSelector((state) => state.theme);
+
   const navigate = useNavigate();
   useEffect(() => {
     if (user) {
@@ -38,7 +40,7 @@ function LoginAlert({ setShow }) {
     setLoading(true);
     setMsg(null);
 
-    const response = await fetch("http://localhost:3000/api/v1/client/login", {
+    const response = await fetch("http://localhost:4000/api/users/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(loginData),
@@ -61,10 +63,23 @@ function LoginAlert({ setShow }) {
   };
   return (
     <div className="fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]">
-      <div className="relative max-w-md w-full border py-8 px-6 rounded border-gray-300 bg-white">
+      <div className="relative max-w-md w-full border py-8 px-6 rounded border-gray-300 bg-white dark:bg-gray-700 dark:border-none dark:text-gray-100">
         <div className="flex justify-between items-center mb-10">
-          <img src="/images/logo.png" alt="logo" className="w-40 " />
-          <span className="text-blue-600 cursor-pointer" onClick={setShow}>
+          <div className="flex items center">
+            <img
+              src={
+                isDarkMOde
+                  ? "./imgs/logo-bebo-light.png"
+                  : "./imgs/logo-bebo.png"
+              }
+              alt="logo"
+              className="w-8"
+            />
+            <h1 className="text-2xl text-green-600 dark:text-green-500">
+              logies
+            </h1>
+          </div>
+          <span className="text-green-600 cursor-pointer" onClick={setShow}>
             <i className="fa-solid fa-x"></i>
           </span>
         </div>
@@ -77,7 +92,7 @@ function LoginAlert({ setShow }) {
               name="username"
               type="text"
               required
-              className="w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-blue-500"
+              className="w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-green-500 border-none bg-gray-100 dark:bg-gray-600"
               placeholder="Username"
               value={loginData.username}
               onChange={hamdleChange}
@@ -88,7 +103,7 @@ function LoginAlert({ setShow }) {
               name="password"
               type="password"
               required
-              className="w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-blue-500"
+              className="w-full text-sm px-4 py-3 rounded outline-none border-2 focus:border-green-500 border-none bg-gray-100 dark:bg-gray-600"
               placeholder="Password"
               value={loginData.password}
               onChange={hamdleChange}
@@ -100,7 +115,7 @@ function LoginAlert({ setShow }) {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 shrink-0 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                className="h-4 w-4 shrink-0 text-green-600 focus:ring-green-500 border-gray-300 rounded border-none"
               />
               <label htmlFor="remember-me" className="ml-3 block text-sm">
                 Remember me
@@ -109,7 +124,7 @@ function LoginAlert({ setShow }) {
             <div>
               <a
                 href="jajvascript:void(0);"
-                className="text-sm text-blue-600 hover:text-blue-500"
+                className="text-sm text-green-600 hover:text-green-500"
               >
                 Forgot Password?
               </a>
@@ -142,7 +157,7 @@ function LoginAlert({ setShow }) {
           <div className="!mt-10">
             <button
               type="submit"
-              className="w-full py-2.5 px-4 text-sm rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+              className="w-full py-2.5 px-4 text-sm rounded text-white bg-green-600 hover:bg-green-700 focus:outline-none"
             >
               Log in
             </button>

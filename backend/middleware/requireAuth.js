@@ -21,7 +21,13 @@ const requireAuth = async (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
-    res.status(401).json({ error: "Request not authorized" });
+    if (error.name === "TokenExpiredError") {
+      return res
+        .status(401)
+        .json({ message: "Token expired", expiredAt: error.expiredAt });
+    } else {
+      return res.status(400).json({ message: "Invalid token" });
+    }
   }
 };
 module.exports = requireAuth;

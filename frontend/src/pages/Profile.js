@@ -21,7 +21,7 @@ export const Profile = () => {
   const user = useSelector((state) => state.auth);
   const posts = useSelector((state) => state.posts.userPosts);
   const mode = useSelector((state) => state.theme);
-  const { userData, isUserLoading } = useSelector((state) => state.users);
+  const { userData } = useSelector((state) => state.users);
   const [activeBlog, setActiveBlog] = useState("");
   const [showComments, setShowCmnt] = useState(false);
   const [showControls, setShowControls] = useState(false);
@@ -435,6 +435,9 @@ export const Profile = () => {
           src={mode ? "./imgs/camera.png" : "./imgs/camera-dark.png"}
           alt="edit"
         />
+      </div>
+      <div>
+        
       </div>
       {blogs.length > 0 ? (
         <div className="bg-white flex flex-col items-center w-full m-auto py-20 gap-y-7 dark:bg-gray-800">
