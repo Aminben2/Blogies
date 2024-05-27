@@ -4,14 +4,24 @@ import AuthorPost from "../../components/authorPost";
 import Bar from "../../components/Bar";
 import { useDispatch, useSelector } from "react-redux";
 import { formatDistanceToNow } from "date-fns";
-import { removePrevReaction } from "../../store/postsSlice";
+import { removePrevReaction, removeReaction } from "../../store/postsSlice";
+import { Avatar, useToast } from "@chakra-ui/react";
+import ReactionStats from "../../components/ReactionStats/ReactionStats";
 
 export default function OneBlog(props) {
   const dispatch = useDispatch();
   const [revealed, setRevealed] = useState(false);
   const [userReaction, setUserReaction] = useState(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const maxLength = 200;
+  const isLongText = props.content.length > maxLength;
   const isDarkMode = useSelector((state) => state.theme);
   const { prevReactions } = useSelector((state) => state.posts);
+  const [user1, setUser1] = useState({});
+  const [showReactionStats, setShowReactionStats] = useState(false);
+
+  const [commentingUser, setCommentingUser] = useState({});
+
   const user = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -68,6 +78,7 @@ export default function OneBlog(props) {
       reactionStyle = "";
       break;
   }
+  const toast = useToast();
 
   const unReact = async (reactObj) => {
     if (!user) {
@@ -88,39 +99,152 @@ export default function OneBlog(props) {
     const json = await response.json();
     if (response.ok) {
       dispatch(removePrevReaction({ postId: props._id }));
+      dispatch(removeReaction(reactObj));
       setUserReaction(null);
+      toast({
+        title: `Post Unreacted`,
+        status: "success",
+        isClosable: true,
+      });
     } else {
       console.log(json.error);
+      toast({
+        title: `Someting went wrong`,
+        status: "error",
+        isClosable: true,
+      });
     }
   };
+  const handleToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
+  useEffect(() => {
+    const fetchUserComment = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/users/oneUser/${props.userId}`
+        );
+        const user = await response.json();
+
+        if (!response.ok) {
+          console.log("Could NOT fetch user from api");
+        } else {
+          setCommentingUser(user);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    fetchUserComment();
+  }, [dispatch, props.userId]);
+
+  useEffect(() => {
+    const fetchUserComment = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/users/oneUser/${props.reactions[0].userId}`
+        );
+        const user = await response.json();
+
+        if (!response.ok) {
+          console.log("Could NOT fetch user from api");
+        } else {
+          setUser1(user);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    if (props.reactions.length >= 1) fetchUserComment();
+  }, [props.reactions]);
+
+  console.log(props.reactions.length);
 
   return (
     <section
       className="post border w-full border-green-500 dark:border-green-400"
       key={props._id}
     >
-      <div className="w-full">
+      {showReactionStats && (
+        <ReactionStats
+          reactions={props.reactions}
+          setShow={() => setShowReactionStats(false)}
+          show={showReactionStats}
+        />
+      )}
+      <div className="flex gap-3">
+        <NavLink to={"/profile/" + props.userId}>
+          <Avatar
+            size="md"
+            cursor="pointer"
+            name={commentingUser.username}
+            src={"http://localhost:4000/uploads/" + commentingUser.img}
+          />
+        </NavLink>
+        <div className="flex flex-col ">
+          <span className="dark:text-gray-100 capitalize">
+            {commentingUser.firstName + " " + commentingUser.lastName}
+          </span>
+          <span className="dark:text-gray-400">@{commentingUser.username}</span>
+        </div>
+      </div>
+      <h1 className="text-green-500 dark:text-green-400 text-md first-letter:capitalize font-bold">
+        {props.title}
+      </h1>
+      <p className="font-bold dark:text-gray-100 first-letter:capitalize px-3">
+        {isExpanded
+          ? props.content
+          : `${props.content.substring(0, maxLength)}${
+              isLongText ? "..." : ""
+            }`}
+        {isLongText && (
+          <span
+            onClick={handleToggle}
+            className="text-blue-500 cursor-pointer text-sm ml-1"
+          >
+            {isExpanded ? "show less" : "show more"}
+          </span>
+        )}
+      </p>
+      <div className="w-[95%] m-auto mt-2">
         <Link to={props._id.toString()}>
           <img
             src={"http://localhost:4000/uploads/" + props.image[0]}
-            className="post-img transition-transform hover:scale-105 duration-200 w-full"
+            className="post-img w-full"
             alt="pic"
           />
         </Link>
       </div>
-      <h1 className="post-title text-green-500 dark:text-green-400 text-xl first-letter:capitalize">
-        {props.title}
-      </h1>
-      <p className="post-content font-bold dark:text-gray-100 first-letter:capitalize">
-        {props.content}
-      </p>
       <div className="author">
         <AuthorPost userId={props.userId} />
       </div>
-
+      <div className="">
+        {props.reactions.length >= 1 && (
+          <span
+            className="dark:text-gray-300 font-bold text-sm tracking-tight cursor-pointer hover:underline hover:text-green-600"
+            onClick={() => setShowReactionStats(true)}
+          >
+            {props.reactions.length > 1
+              ? user1.username +
+                " and " +
+                props.reactions.length +
+                " other peopole"
+              : "Reacted by " + user1.username}
+          </span>
+        )}
+        <div className="float-right">
+          <NavLink to={props._id}>
+            <p className="dark:text-gray-100 font-thin text-sm px-1 hover:underline hover:text-green-600">
+              See all {props.comments ? props.comments.length : "0"} Comments
+            </p>
+          </NavLink>
+        </div>
+      </div>
       <div className="relative comments flex flex-row justify-center items-center dark:bg-gray-600 ">
         {revealed && (
-          <Bar show={revealed} {...props} hideReactions={setRevealed} />
+          <Bar show={revealed} postId={props._id} hideReactions={setRevealed} />
         )}
 
         <button
@@ -159,11 +283,6 @@ export default function OneBlog(props) {
           ></lord-icon>
         </NavLink>
       </div>
-      <NavLink to={props._id}>
-        <p className="dark:text-gray-100 font-thin text-sm px-1">
-          See all {props.comments ? props.comments.length : "0"} Comments
-        </p>
-      </NavLink>
       <span className="ml-2 text-xs font-normal text-gray-500 dark:text-gray-300">
         {props.createdAt
           ? formatDistanceToNow(new Date(props.createdAt), {

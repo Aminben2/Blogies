@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfileCover } from "../../store/usersSlice";
+import { useToast } from "@chakra-ui/react";
 
 function EditProfileCover({ closePopup1, userId }) {
   const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
+  const toast = useToast();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -60,7 +62,17 @@ function EditProfileCover({ closePopup1, userId }) {
       if (res.ok) {
         closePopup1(false);
         dispatch(updateProfileCover({ imageUrl: imagesUrl[0] }));
+        toast({
+          title: `Profile cover is updated`,
+          status: "success",
+          isClosable: true,
+        });
       } else {
+        toast({
+          title: `Something went wrong`,
+          status: "error",
+          isClosable: true,
+        });
         console.error(data.error);
       }
     } catch (error) {

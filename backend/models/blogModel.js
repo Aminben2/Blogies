@@ -16,7 +16,6 @@ const commentLikesSchema = new Schema({
   userId: {
     type: String,
     required: true,
-    unique: true,
   },
 });
 
@@ -24,7 +23,6 @@ const replyLikeSchema = new Schema({
   userId: {
     type: String,
     required: true,
-    unique: true,
   },
 });
 
@@ -44,7 +42,11 @@ const commentRepliesSchema = new Schema(
       ref: "User",
       required: true,
     },
-    likes: { default: [], type: [replyLikeSchema] },
+    loved: {
+      type: Boolean,
+      default: false,
+    },
+    likes: { type: [replyLikeSchema], default: [] },
   },
   { timestamps: true }
 );

@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { addPost } from "../store/postsSlice";
 import { useNavigate } from "react-router-dom";
 import { getCategories } from "../store/categorySlice";
+import { useToast } from "@chakra-ui/react";
 
 function AddPostFrom() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth);
+  const toast = useToast();
   const { categories, isCategoriesLoading } = useSelector(
     (state) => state.categories
   );
@@ -39,7 +41,6 @@ function AddPostFrom() {
       }
     });
   };
-  const canAddPost = Boolean(postInfo.title) && Boolean(postInfo.content);
   const validateInputs = () => {
     if (!postInfo.title) {
       setError("Please enter a title.");
@@ -105,7 +106,6 @@ function AddPostFrom() {
       comments: [],
     };
 
-    // {"_id":"65a2b23ba16608ac54bf9380","token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWEyYjIzYmExNjYwOGFjNTRiZjkzODAiLCJpYXQiOjE3MDc5MjE3MTksImV4cCI6MTcwODE4MDkxOX0.5wTjOeOkIsy-zstV0H2JmNH7Jp9YJ9Dy6as1s1Cjngw"}
     const response = await fetch("http://localhost:4000/api/blogs/", {
       method: "POST",
       body: JSON.stringify(blog),
@@ -117,21 +117,30 @@ function AddPostFrom() {
     const json = await response.json();
     if (!response.ok) {
       setError(json.error);
+      toast({
+        title: `Someting went wrong`,
+        status: "error",
+        isClosable: true,
+      });
     }
     if (response.ok) {
+      toast({
+        title: `Post added`,
+        status: "success",
+        isClosable: true,
+      });
       setError("");
       dispatch(addPost(json));
       navigate("/blogs");
+      setPostInfo({
+        title: "",
+        content: "",
+        userId: "",
+        category: "",
+        tags: "",
+        image: "",
+      });
     }
-
-    setPostInfo({
-      title: "",
-      content: "",
-      userId: "",
-      category: "",
-      tags: "",
-      image: "",
-    });
   };
   let categoriesOptions;
   if (!isCategoriesLoading)
@@ -238,9 +247,8 @@ function AddPostFrom() {
               <span className="text-red-500 text-sm mb-4">{error}</span>
             )}
             <button
-              className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-md focus:outline-none focus:shadow-outline"
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-md focus:outline-none focus:shadow-outline cursor-pointer"
               type="submit"
-              disabled={!canAddPost}
             >
               Add Blog
             </button>

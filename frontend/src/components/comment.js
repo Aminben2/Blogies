@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUsers } from "../store/usersSlice";
+import { getUser, getUsers } from "../store/usersSlice";
 
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { delComment, likeComment, unlikeComment } from "../store/postsSlice";
@@ -8,6 +8,7 @@ import { pinCom } from "../store/postsSlice";
 import { apreCom } from "../store/postsSlice";
 import { NavLink } from "react-router-dom";
 import Replies from "./Replies/Replies";
+import { Avatar, useToast } from "@chakra-ui/react";
 
 export const Comment = (props) => {
   const { users } = useSelector((state) => state.users);
@@ -15,11 +16,36 @@ export const Comment = (props) => {
   const user = useSelector((state) => state.auth);
   const [userLoved, setUserLoved] = useState(null);
   const [showReplies, setShowReplies] = useState(false);
+  const [commentingUser, setCommentingUser] = useState({});
+
+  const toast = useToast();
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
+
+  useEffect(() => {
+    const fetchUserComment = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/users/oneUser/${props.userId}`
+        );
+        const user = await response.json();
+
+        if (!response.ok) {
+          console.log("Could NOT fetch user from api");
+        } else {
+          setCommentingUser(user);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    fetchUserComment();
+  }, [props.userId]);
+
   const menuRef = useRef(null);
   useEffect(() => {
     let isLiked;
@@ -63,8 +89,18 @@ export const Comment = (props) => {
       // Update the state in redux
       dispatch(pinCom({ commentId, postId }));
       setShowCommentControls(false);
+      toast({
+        title: `Comment pinned`,
+        status: "success",
+        isClosable: true,
+      });
     } else {
       console.log(json.error);
+      toast({
+        title: `Someting went wrong`,
+        status: "error",
+        isClosable: true,
+      });
     }
   };
 
@@ -87,7 +123,17 @@ export const Comment = (props) => {
     if (response.ok) {
       dispatch(apreCom(com));
       setShowCommentControls(false);
+      toast({
+        title: `Comment appreciated`,
+        status: "success",
+        isClosable: true,
+      });
     } else {
+      toast({
+        title: `Someting went wrong`,
+        status: "error",
+        isClosable: true,
+      });
       console.log(json.error);
     }
   };
@@ -111,7 +157,17 @@ export const Comment = (props) => {
     if (response.ok) {
       dispatch(delComment(com));
       setShowCommentControls(false);
+      toast({
+        title: `Comment deleted`,
+        status: "success",
+        isClosable: true,
+      });
     } else {
+      toast({
+        title: `Someting went wrong`,
+        status: "error",
+        isClosable: true,
+      });
       console.log(json.error);
     }
   };
@@ -161,10 +217,11 @@ export const Comment = (props) => {
             <div className="relative flex flex-row md-10 justify-between w-full">
               <div className="flex flex-row">
                 <NavLink to={"/profile/" + props.userId}>
-                  <img
-                    className="w-12 h-12 border-2 border-gray-300 rounded-full"
-                    alt="Anonymous's avatar"
-                    src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&faces=1&faceindex=1&facepad=2.5&w=500&h=500&q=80"
+                  <Avatar
+                    size="md"
+                    cursor="pointer"
+                    name={commentingUser.username}
+                    src={"http://localhost:4000/uploads/" + commentingUser.img}
                   />
                 </NavLink>
                 <div className="flex-col mt-1">
@@ -224,17 +281,6 @@ export const Comment = (props) => {
                     />
                   </span>
 
-                  <div className="flex items-center gap-2" onClick={likeUnlike}>
-                    <img
-                      className="w-5"
-                      src={
-                        userLoved
-                          ? "../imgs/loved.png"
-                          : "../imgs/darkHeart.png"
-                      }
-                      alt=""
-                    />
-                  </div>
                   {showCommentControls && (
                     <ul
                       ref={menuRef}
@@ -278,21 +324,28 @@ export const Comment = (props) => {
             <div className="flex flex-row gap-4 items-center w-fit ml-16">
               <span className="text-sm text-gray-900">
                 {props.likes ? props.likes.length : "0"} likes
+                {props.modify && (
+                  <span className="ml-3">
+                    {props.replies ? props.replies.length : "0"} replies
+                  </span>
+                )}
               </span>
-              <div
-                onClick={setRepState}
-                className=" cursor-pointer flex gap-1 text-sm items-center text-gray-900"
-              >
-                <svg
-                  width="14px"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                  className="text-gray-900"
+              {!props.modify && (
+                <div
+                  onClick={setRepState}
+                  className=" cursor-pointer flex gap-1 text-sm items-center text-gray-900"
                 >
-                  <path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z" />
-                </svg>
-                <span>reply</span>
-              </div>
+                  <svg
+                    width="14px"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512"
+                    className="text-gray-900"
+                  >
+                    <path d="M205 34.8c11.5 5.1 19 16.6 19 29.2v64H336c97.2 0 176 78.8 176 176c0 113.3-81.5 163.9-100.2 174.1c-2.5 1.4-5.3 1.9-8.1 1.9c-10.9 0-19.7-8.9-19.7-19.7c0-7.5 4.3-14.4 9.8-19.5c9.4-8.8 22.2-26.4 22.2-56.7c0-53-43-96-96-96H224v64c0 12.6-7.4 24.1-19 29.2s-25 3-34.4-5.4l-160-144C3.9 225.7 0 217.1 0 208s3.9-17.7 10.6-23.8l160-144c9.4-8.5 22.9-10.6 34.4-5.4z" />
+                  </svg>
+                  <span>reply</span>
+                </div>
+              )}
             </div>
           </div>
           {props.replies?.length >= 1 && (
@@ -311,6 +364,7 @@ export const Comment = (props) => {
               replies={props.replies}
               postId={props.postId}
               commentId={props._id}
+              modify={props.modify}
             />
           )}
         </div>

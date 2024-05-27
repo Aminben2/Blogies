@@ -1,12 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { updateNotificationSeen } from "../../store/NotificationsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Avatar, useToast } from "@chakra-ui/react";
 
-function OneNotif({ _id, subject, title, seen, createdAt }) {
+function OneNotif({ _id, subject, title, seen, createdAt, userId }) {
   const user = useSelector((state) => state.auth);
+  const toast = useToast();
+  const [userNotif, setUserNotif] = useState(false);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const fetchUserComment = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/api/users/oneUser/${userId}`
+        );
+        const user = await response.json();
+
+        if (!response.ok) {
+          console.log("Could NOT fetch user from api");
+        } else {
+          setUserNotif(user);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    fetchUserComment();
+  }, [userId]);
   const formatTimestamp = (timestamp) => {
     return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
   };
@@ -26,8 +49,18 @@ function OneNotif({ _id, subject, title, seen, createdAt }) {
 
     const dataRes = await res.json();
     if (res.ok) {
+      toast({
+        title: `All notifocations marked seen`,
+        status: "success",
+        isClosable: true,
+      });
       dispatch(updateNotificationSeen(_id));
     } else {
+      toast({
+        title: `Someting went wrong`,
+        status: "error",
+        isClosable: true,
+      });
       console.log(dataRes.error);
     }
   };
@@ -35,7 +68,7 @@ function OneNotif({ _id, subject, title, seen, createdAt }) {
   return (
     <li
       onClick={markSeen}
-      className={`py-4 px-4 flex items-center relative hover:bg-green-50 dark:hover:bg-gray-800 ${
+      className={`py-4 border-none px-4 flex items-center relative hover:bg-green-50 dark:hover:bg-gray-800 ${
         !seen &&
         "bg-green-50 hover:bg-green-100 dark:bg-gray-700 dark:hover:bg-gray-800 "
       } text-black text-sm cursor-pointer`}
@@ -45,9 +78,11 @@ function OneNotif({ _id, subject, title, seen, createdAt }) {
           <div className="w-2 h-2 bg-green-600 rounded-full dark:bg-green-500"></div>
         </div>
       )}
-      <img
-        src="https://readymadeui.com/profile_2.webp"
-        className="w-12 h-12 rounded-full shrink-0"
+      <Avatar
+        size="md"
+        cursor="pointer"
+        name={userNotif.username}
+        src={"http://localhost:4000/uploads/" + userNotif.img}
       />
       <div className="ml-6">
         <h3 className="text-sm text-[#333] font-semibold dark:text-white">

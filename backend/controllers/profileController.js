@@ -153,7 +153,76 @@ const editBlog = async (req, res) => {
 
   res.status(200).json(blog);
 };
+
+const deleteReply = async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req.body;
+
+    // Find the blog post by ID
+    const blog = await Blogs.findById(postId);
+    if (!blog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+
+    // Find the comment by ID within the blog post
+    const comment = blog.comments.id(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    // Find the reply by ID within the comment
+    const reply = comment.replies.id(replyId);
+    if (!reply) {
+      return res.status(404).json({ error: "Reply not found" });
+    }
+
+    comment.replies = comment.replies.filter((r) => r._id !== reply._id);
+    // Save the updated blog post
+    await blog.save();
+
+    res.status(200).json({ message: "Reply deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const appreciateReply = async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req.body;
+
+    // Find the blog post by ID
+    const blog = await Blogs.findById(postId);
+    if (!blog) {
+      return res.status(404).json({ error: "Blog not found" });
+    }
+
+    // Find the comment by ID within the blog post
+    const comment = blog.comments.id(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    // Find the reply by ID within the comment
+    const reply = comment.replies.id(replyId);
+    if (!reply) {
+      return res.status(404).json({ error: "Reply not found" });
+    }
+
+    // Toggle the loved field
+    reply.loved = !reply.loved;
+
+    // Save the updated blog post
+    await blog.save();
+
+    res
+      .status(200)
+      .json({ message: "Reply loved field toggled successfully", reply });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 module.exports = {
+  deleteReply,
   deleteComment,
   changePrivacy,
   deleteUserBlog,
@@ -162,4 +231,5 @@ module.exports = {
   apreciateComment,
   toggleComments,
   editBlog,
+  appreciateReply,
 };

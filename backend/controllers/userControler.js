@@ -95,6 +95,37 @@ const getUser = async (req, res) => {
   res.status(200).json(user);
 };
 
+const deleteAllNotifs = async (req, res) => {
+  const { chatId } = req.body;
+
+  if (!chatId) {
+    return res.status(400).json({ error: "Chat ID is required" });
+  }
+
+  try {
+    await User.updateOne(
+      { _id: req.user._id },
+      { $pull: { notifications: { chatId: chatId } } }
+    );
+    res.status(200).json({ message: "Notifications deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const userNotifications = async (req, res) => {
+  try {
+    const userId = req.user._id; // Assume user ID is available in req.user
+    const user = await User.findById(userId).populate(
+      "notifications.senderId",
+      "username"
+    );
+    res.status(200).json(user.notifications);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const updateProfilePic = async (req, res) => {
   const { id } = req.params;
   const { imageUrl } = req.body;
@@ -134,23 +165,23 @@ const updateProfileCover = async (req, res) => {
 
 const updateContactInfo = async (req, res) => {
   try {
-    const { contactInfo, dateOfBirth } = req.body;
+    const { phone, address, website, dateOfBirth } = req.body;
 
-    // Validate the date format if necessary
-    if (dateOfBirth && !validator.isDate(dateOfBirth)) {
-      return res.status(400).json({ error: "Invalid date format" });
-    }
+    // Construct the update object dynamically
+    const updateFields = {};
+    if (phone !== "" && phone !== undefined)
+      updateFields["contactInfo.phone"] = phone;
+    if (address !== "" && address !== undefined)
+      updateFields["contactInfo.address"] = address;
+    if (website !== "" && website !== undefined)
+      updateFields["contactInfo.website"] = website;
+    if (dateOfBirth !== "" && dateOfBirth !== undefined)
+      updateFields.dateOfBirth = dateOfBirth;
 
+    // Perform the update
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      {
-        $set: {
-          "contactInfo.phone": contactInfo.phone,
-          "contactInfo.address": contactInfo.address,
-          "contactInfo.website": contactInfo.website,
-          dateOfBirth: dateOfBirth,
-        },
-      },
+      { $set: updateFields },
       { new: true, runValidators: true } // returns the updated document
     );
 
@@ -161,37 +192,6 @@ const updateContactInfo = async (req, res) => {
     res.status(200).json(updatedUser);
   } catch (err) {
     res.status(500).json({ error: err.message });
-  }
-};
-
-const deleteAllNotifs = async (req, res) => {
-  const { chatId } = req.body;
-
-  if (!chatId) {
-    return res.status(400).json({ error: "Chat ID is required" });
-  }
-
-  try {
-    await User.updateOne(
-      { _id: req.user._id },
-      { $pull: { notifications: { chatId: chatId } } }
-    );
-    res.status(200).json({ message: "Notifications deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-const userNotifications = async (req, res) => {
-  try {
-    const userId = req.user._id; // Assume user ID is available in req.user
-    const user = await User.findById(userId).populate(
-      "notifications.senderId",
-      "username"
-    );
-    res.status(200).json(user.notifications);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
 };
 
@@ -212,13 +212,13 @@ const addWork = async (req, res) => {
       position,
       startDate,
       endDate,
-      current: !endDate ? true : false,
+      current: !endDate || current ? true : false,
       desc,
     };
 
     // Find the user and add the new work experience
     const updatedUser = await User.findByIdAndUpdate(
-      req.user_.id,
+      req.user._id,
       { $push: { work: newWork } },
       { new: true, runValidators: true }
     );
@@ -272,8 +272,8 @@ const addEducation = async (req, res) => {
       degree,
       fieldOfStudy,
       startDate,
-      endDate: !endDate ? true : false,
-      current,
+      endDate,
+      current: !endDate || current ? true : false,
       desc,
     };
 
@@ -341,18 +341,18 @@ const updateBio = async (req, res) => {
 
 const updatePersonnalInfo = async (req, res) => {
   try {
-    const { username, firstName, lastName } = req.body;
+    const { firstName, lastName } = req.body;
 
-    // Validate required fields
-    if (!username || !firstName || !lastName) {
-      return res
-        .status(400)
-        .json({ error: "Username, firstName, and lastName are required" });
-    }
+    // Construct the update object dynamically
+    const updateFields = {};
+    if (firstName !== "" && firstName !== undefined)
+      updateFields.firstName = firstName;
+    if (lastName !== "" && lastName !== undefined)
+      updateFields.lastName = lastName;
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
-      { $set: { username, firstName, lastName } },
+      { $set: updateFields },
       { new: true, runValidators: true }
     );
 

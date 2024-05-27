@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { editBlog } from "../../store/postsSlice";
+import { useToast } from "@chakra-ui/react";
 
 function UpdatePostForm(props) {
   const dispatch = useDispatch();
-
+  const toast = useToast();
   const user = useSelector((state) => state.auth);
   const [error, setError] = useState("");
   let [postInfo, setPostInfo] = useState({
@@ -100,14 +101,18 @@ function UpdatePostForm(props) {
       setError("");
       dispatch(editBlog(json));
       props.close();
+      toast({
+        title: `Post is updated`,
+        status: "success",
+        isClosable: true,
+      });
+      setPostInfo({
+        title: "",
+        content: "",
+        tags: "",
+        image: "",
+      });
     }
-
-    setPostInfo({
-      title: "",
-      content: "",
-      tags: "",
-      image: "",
-    });
   };
   return (
     <div

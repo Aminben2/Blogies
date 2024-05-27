@@ -7,11 +7,14 @@ import OnePostLoader from "../components/loaders/onePostLoader";
 import { addComment, addReply, getOnePost } from "../store/postsSlice";
 import ImageLoader from "../components/loaders/ImageLoader";
 import { getUser } from "../store/usersSlice";
+import { useToast } from "@chakra-ui/react";
 
 export const Blog = () => {
   const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { id } = useParams();
+  const toast = useToast();
+
   const { onePost, isLoadigOnePost } = useSelector((state) => state.posts);
   const { userData, isUserIsLoading } = useSelector((state) => state.users);
 
@@ -135,6 +138,11 @@ export const Blog = () => {
       setIsReplying(false);
       setReplyTo("");
       setCommentId("");
+      toast({
+        title: `Reply added`,
+        status: "success",
+        isClosable: true,
+      });
     } else {
       console.log(data.error);
     }

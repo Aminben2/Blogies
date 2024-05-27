@@ -7,7 +7,7 @@ import {
   savePrevReaction,
 } from "../store/postsSlice";
 
-const Bar = ({ _id, show, hideReactions }) => {
+const Bar = ({ postId, show, hideReactions }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth);
 
@@ -18,7 +18,7 @@ const Bar = ({ _id, show, hideReactions }) => {
   useEffect(() => {
     const getReactions = async () => {
       const res = await fetch(
-        `http://localhost:4000/api/blogs/${_id}/reactions`,
+        `http://localhost:4000/api/blogs/${postId}/reactions`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -39,14 +39,14 @@ const Bar = ({ _id, show, hideReactions }) => {
       }
     };
     getReactions();
-  }, [_id, dispatch, user]);
+  }, [postId, dispatch, user]);
 
   const react = async (reactObj) => {
     if (!user) {
       return;
     }
     const response = await fetch(
-      `http://localhost:4000/api/blogs/${_id}/react`,
+      `http://localhost:4000/api/blogs/${postId}/react`,
       {
         method: "PATCH",
         headers: {
@@ -59,7 +59,7 @@ const Bar = ({ _id, show, hideReactions }) => {
 
     const json = await response.json();
     if (response.ok) {
-      dispatch(addReaction(reactObj));
+      dispatch(addReaction({ ...reactObj, postId }));
       return json;
     } else {
       console.log(json.error);
@@ -71,7 +71,7 @@ const Bar = ({ _id, show, hideReactions }) => {
       return;
     }
     const response = await fetch(
-      `http://localhost:4000/api/blogs/${_id}/unReact`,
+      `http://localhost:4000/api/blogs/${postId}/unReact`,
       {
         method: "PATCH",
         headers: {
@@ -84,7 +84,7 @@ const Bar = ({ _id, show, hideReactions }) => {
 
     const json = await response.json();
     if (response.ok) {
-      dispatch(removeReaction(reactObj));
+      dispatch(removeReaction({ ...reactObj, postId }));
       return json;
     } else {
       console.log(json.error);
@@ -126,7 +126,7 @@ const Bar = ({ _id, show, hideReactions }) => {
     }
     // Set the previous reaction for future undo operation
     setPreReaction({ userId: user._id, reaction: reaction });
-    dispatch(savePrevReaction({ postId: _id, reaction: reaction }));
+    dispatch(savePrevReaction({ postId: postId, reaction: reaction }));
   };
 
   const handleClick = (reaction) => {

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateProfilePic } from "../../store/usersSlice";
+import { useToast } from "@chakra-ui/react";
 
 function EditProfilePicForm({ closePopup, userId }) {
   const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
+  const toast = useToast();
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -43,6 +45,11 @@ function EditProfilePicForm({ closePopup, userId }) {
     if (res.ok) {
       closePopup();
       dispatch(updateProfilePic({ imageUrl: imagesUrl[0] }));
+      toast({
+        title: `Profile picture is updated`,
+        status: "success",
+        isClosable: true,
+      });
     } else {
       console.log(data.error);
     }

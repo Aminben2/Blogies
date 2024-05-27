@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, NavLink, Navigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { switchTheme } from "../store/modeSlice";
 import UserDropDown from "../components/DropDown/UserDropDown";

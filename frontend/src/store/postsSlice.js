@@ -125,33 +125,11 @@ const postSlice = createSlice({
     },
     addReaction(state, action) {
       const { postId, reaction, userId } = action.payload;
-      const existingPostIndex = state.posts.findIndex(
-        (post) => post._id === postId
-      );
-      if (existingPostIndex !== -1) {
-        const existingPost = state.posts[existingPostIndex];
-        const existingReactionIndex = existingPost.reactions.findIndex(
-          (r) => r.userId === userId
-        );
-        if (existingReactionIndex !== -1) {
-          if (
-            existingPost.reactions[existingReactionIndex].reaction === reaction
-          ) {
-            // If the same reaction, remove it
-            state.posts[existingPostIndex].reactions.splice(
-              existingReactionIndex,
-              1
-            );
-          } else {
-            // If different reaction, update it
-            state.posts[existingPostIndex].reactions[
-              existingReactionIndex
-            ].reaction = reaction;
-          }
-        } else {
-          // If no existing reaction, add it
-          state.posts[existingPostIndex].reactions.push({ userId, reaction });
-        }
+      console.log(postId);
+
+      const post = state.posts.find((p) => p._id === postId);
+      if (post) {
+        post.reactions.push(action.payload);
       }
     },
     addReply: (state, action) => {
@@ -165,14 +143,11 @@ const postSlice = createSlice({
     },
     removeReaction(state, action) {
       const { postId, userId } = action.payload;
-      const existingPostIndex = state.posts.findIndex(
-        (post) => post._id === postId
-      );
-      if (existingPostIndex !== -1) {
-        const existingPost = state.posts[existingPostIndex];
-        existingPost.reactions = existingPost.reactions.filter(
-          (r) => r.userId !== userId
-        );
+      const post = state.posts.find((p) => p._id === postId);
+      console.log(postId);
+
+      if (post) {
+        post.reactions = post.reactions.filter((r) => r.userId !== userId);
       }
     },
     removePrevReaction(state, action) {
@@ -330,6 +305,36 @@ const postSlice = createSlice({
         }
       }
     },
+    deleteReply: (state, action) => {
+      const { replyId, postId, commentId } = action.payload;
+      const post = state.userPosts.find((p) => p._id == postId);
+      if (post) {
+        const comment = post.comments.find(
+          (comment) => comment._id === commentId
+        );
+        if (comment) {
+          comment.replies = comment.replies.filter(
+            (reply) => reply._id !== replyId
+          );
+        }
+      }
+    },
+    appReply: (state, action) => {
+      const { replyId, postId, commentId } = action.payload;
+      const post = state.userPosts.find((p) => p._id == postId);
+
+      if (post) {
+        const comment = post.comments.find(
+          (comment) => comment._id === commentId
+        );
+        if (comment) {
+          const reply = comment.replies.find((reply) => reply._id === replyId);
+          if (reply) {
+            reply.loved = !reply.loved;
+          }
+        }
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -405,5 +410,7 @@ export const {
   addReply,
   likeReply,
   unlikeReply,
+  deleteReply,
+  appReply,
 } = postSlice.actions;
 export default postSlice;

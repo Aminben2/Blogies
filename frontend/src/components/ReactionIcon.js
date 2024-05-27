@@ -1,6 +1,4 @@
 const ReactionIcon = ({ name }) => {
-  // This function should return the appropriate SVG icon based on the reaction name
-  // For simplicity, we'll just return a placeholder text
   let icon = "";
   switch (name) {
     case "love":

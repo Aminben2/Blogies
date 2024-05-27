@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { delEducation } from "../../store/usersSlice";
+import { useToast } from "@chakra-ui/react";
 
 function Education({
   school,
@@ -8,7 +11,12 @@ function Education({
   endDate,
   current,
   desc,
+  _id,
 }) {
+  const [showMinus, setShowMinus] = useState(false);
+  const toast = useToast();
+  const user = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   function formatDate(pp) {
     const date = new Date(pp);
     // Get the day, month, and year parts of the date
@@ -19,8 +27,54 @@ function Education({
     // Return the formatted date string
     return `${day}-${month}-${year}`;
   }
+  const deleteEducation = async () => {
+    const response = await fetch(
+      "http://localhost:4000/api/users/education/" + _id,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+    const json = await response.json();
+    if (response.ok) {
+      dispatch(delEducation(_id));
+      toast({
+        title: `Education deleted`,
+        status: "success",
+        isClosable: true,
+      });
+    } else {
+      console.log(json.error);
+      toast({
+        title: `Something went wrong`,
+        status: "error",
+        isClosable: true,
+      });
+    }
+  };
   return (
-    <div className="mb-10 ">
+    <div
+      className="mb-10 relative"
+      onMouseEnter={() => setShowMinus(true)}
+      onMouseLeave={() => setShowMinus(false)}
+    >
+      {showMinus && (
+        <div
+          className="absolute right-0 top-0 dark:bg-gray-500 p-2 rounded-full shadow-lg cursor-pointer"
+          onClick={deleteEducation}
+        >
+          <svg
+            className="w-4 dark:fill-gray-100 "
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 448 512"
+          >
+            <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
+          </svg>
+        </div>
+      )}
       <div className="flex justify-between flex-wrap gap-2 w-full">
         <span className="text-gray-700 font-bold dark:text-gray-400">
           {fieldOfStudy} - {degree}

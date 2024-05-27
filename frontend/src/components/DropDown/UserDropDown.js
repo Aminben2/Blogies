@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "../../store/usersSlice";
 import { logout } from "../../store/authSlice";
 import { Link, NavLink } from "react-router-dom";
 

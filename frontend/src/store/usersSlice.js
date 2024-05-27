@@ -54,6 +54,40 @@ const usersSlice = createSlice({
       const { imageUrl } = action.payload;
       state.userData.cover = imageUrl;
     },
+    updatePersonnelInfo: (state, action) => {
+      const { lastName, firstName } = action.payload;
+      state.userData.lastName = lastName;
+      state.userData.firstName = firstName;
+    },
+    updateContactInfo: (state, action) => {
+      const { phone, address, website, dateOfBirth } = action.payload;
+      state.userData.dateOfBirth = dateOfBirth;
+      state.userData.contactInfo.address = address;
+      state.userData.contactInfo.phone = phone;
+      state.userData.contactInfo.website = website;
+    },
+    updateBio: (state, action) => {
+      const bio = action.payload;
+      state.userData.bio = bio;
+    },
+    addExperince: (state, action) => {
+      const exper = action.payload;
+      state.userData.work.push(exper);
+    },
+    addEducation: (state, action) => {
+      const edu = action.payload;
+      state.userData.education.push(edu);
+    },
+    delEducation: (state, action) => {
+      const id = action.payload;
+      state.userData.education = state.userData.education.filter(
+        (edu) => edu._id != id
+      );
+    },
+    delWork: (state, action) => {
+      const id = action.payload;
+      state.userData.work = state.userData.work.filter((edu) => edu._id != id);
+    },
   },
   extraReducers: {
     [getUsers.pending]: (state, action) => {
@@ -79,6 +113,16 @@ const usersSlice = createSlice({
   },
 });
 
-export const { updateProfilePic, updateProfileCover } = usersSlice.actions;
+export const {
+  updateProfilePic,
+  updateProfileCover,
+  updatePersonnelInfo,
+  updateBio,
+  updateContactInfo,
+  addEducation,
+  addExperince,
+  delEducation,
+  delWork,
+} = usersSlice.actions;
 
 export default usersSlice;

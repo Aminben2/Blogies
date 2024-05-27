@@ -165,7 +165,7 @@ const SideDrawer = () => {
               {!notification.length && "No New Messages"}
               {notification.map((notif) => (
                 <MenuItem
-                className="dark:bg-gray-600 dark:text-gray-100"
+                  className="dark:bg-gray-600 dark:text-gray-100"
                   key={notif._id}
                   onClick={() => {
                     setSelectedChat(notif.chat);
@@ -210,7 +210,7 @@ const SideDrawer = () => {
       </Box>
       <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
-        <DrawerContent bg={darkMode ? "#374151" : ""}>
+        <DrawerContent bg={darkMode ? "#374151" : "white"}>
           <DrawerHeader
             textColor={darkMode ? "#F3F4F6" : "black"}
             className="shadow-md mb-5 dark:text-gray-200"

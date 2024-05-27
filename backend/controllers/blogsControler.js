@@ -69,7 +69,7 @@ const addComment = async (req, res) => {
   );
   if (!blog) return res.status(404).json({ error: "No such blog" });
 
-  if (req.user._id !== blog.userId) {
+  if (req.user._id != blog.userId) {
     const userCmnt = await userModel.findOne({ _id: req.body.userId });
     if (!userCmnt)
       return res.status(500).json({ error: "Commenting user not found" });
@@ -118,7 +118,7 @@ const addReaction = async (req, res) => {
 
     await blog.save();
 
-    if (req.user._id !== blog.userId) {
+    if (req.user._id != blog.userId) {
       const userCmnt = await userModel.findOne({ _id: userId });
       if (!userCmnt)
         return res.status(500).json({ error: "reacting user not found" });
@@ -212,7 +212,7 @@ const likeComment = async (req, res) => {
     // Save the updated blog document
     await blog.save();
 
-    if (req.user._id !== blog.userId) {
+    if (req.user._id != blog.userId) {
       const userCmnt = await userModel.findOne({ _id: userId });
       if (!userCmnt)
         return res.status(500).json({ error: "reacting user not found" });
@@ -272,7 +272,7 @@ const addReply = async (req, res) => {
     // Save the updated blog post document
     await blog.save();
 
-    if (userId !== comment.userId) {
+    if (userId != comment.userId) {
       const replyingUser = await userModel.findOne({ _id: userId });
       if (!replyingUser)
         return res.status(500).json({ error: "replying user not found" });
@@ -358,8 +358,6 @@ const likeReply = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
-
-module.exports = { addReply };
 
 module.exports = {
   getAllBlogs,
