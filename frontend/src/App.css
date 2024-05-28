@@ -72,6 +72,7 @@ body::-webkit-scrollbar {
   margin: 0 auto;
   background-color: #ffff;
 }
+
 .one .comment-form {
   position: sticky;
   bottom: 10px;

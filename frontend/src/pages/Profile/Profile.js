@@ -159,7 +159,10 @@ export const Profile = () => {
   };
   const blogs = posts.map((blog) => {
     return (
-      <section key={blog._id} className="post one dark:bg-gray-800 relative">
+      <section
+        key={blog._id}
+        className="post one dark:bg-gray-800 relative bg-gray-800"
+      >
         {showConfimrModel && blog._id === activeBlog && (
           <WarningModal
             confirm={() => deleteBlog(blog._id)}
@@ -667,9 +670,7 @@ export const Profile = () => {
 
               {blogs.length > 0 ? (
                 <div className="bg-white flex flex-col items-center w-full m-auto  gap-y-7 dark:bg-gray-800 dark:border-none">
-                  <div className="border-2 dark:border-none rounded-lg">
-                    {blogs}
-                  </div>
+                  <div className="dark:border-none rounded-lg">{blogs}</div>
                 </div>
               ) : (
                 <div className="flex gap-y-5 flex-col justify-center items-center h-screen ">
