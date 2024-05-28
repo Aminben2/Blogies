@@ -91,9 +91,19 @@ function Reply(props) {
         if (userLoved) {
           dispatch(unlikeReply(data));
           setUserLoved(null);
+          toast({
+            title: `Reply unliked`,
+            status: "success",
+            isClosable: true,
+          });
         } else {
           dispatch(likeReply(data));
           setUserLoved(props.userId);
+          toast({
+            title: `Reply liked`,
+            status: "success",
+            isClosable: true,
+          });
         }
       }
     } catch (error) {

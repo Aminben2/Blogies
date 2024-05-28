@@ -84,6 +84,11 @@ export const Blog = () => {
       setError("You must be loged in");
       return;
     }
+
+    if (!comment) {
+      setError("Please add a comment");
+      return;
+    }
     const commentObject = {
       comment,
       userId: user._id,
@@ -116,6 +121,10 @@ export const Blog = () => {
   };
   const reply = async (e) => {
     e.preventDefault();
+    if (!rep) {
+      setError("Please add your reply");
+      return;
+    }
     const replyObj = {
       commentId,
       postId: onePost._id,
@@ -212,7 +221,6 @@ export const Blog = () => {
                     }
                     onBlur={handleBlur}
                     value={isReplying ? rep : comment}
-                    required
                     className="dark:bg-gray-500 bg-gray-50 focus:bg-white border-0 outline outline-none outline-0 
                   hover:outline-2 focus:outline-2 placeholder:text-gray-500 dark:placeholder:text-gray-50 dark:text-gray-100 placeholder:text-sm"
                   />
@@ -225,7 +233,7 @@ export const Blog = () => {
                 <button type="submit" className="w-32">
                   {isReplying ? "Reply" : "Comment"}
                 </button>
-                {error && <span className="err">{error}</span>}
+                {error && <span className="err mt-2">{error}</span>}
               </form>
             )}
           </div>

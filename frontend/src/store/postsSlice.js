@@ -125,7 +125,6 @@ const postSlice = createSlice({
     },
     addReaction(state, action) {
       const { postId, reaction, userId } = action.payload;
-      console.log(postId);
 
       const post = state.posts.find((p) => p._id === postId);
       if (post) {
@@ -144,8 +143,6 @@ const postSlice = createSlice({
     removeReaction(state, action) {
       const { postId, userId } = action.payload;
       const post = state.posts.find((p) => p._id === postId);
-      console.log(postId);
-
       if (post) {
         post.reactions = post.reactions.filter((r) => r.userId !== userId);
       }

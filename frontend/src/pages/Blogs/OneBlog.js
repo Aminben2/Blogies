@@ -160,8 +160,6 @@ export default function OneBlog(props) {
     if (props.reactions.length >= 1) fetchUserComment();
   }, [props.reactions]);
 
-  console.log(props.reactions.length);
-
   return (
     <section
       className="post border w-full border-green-500 dark:border-green-400"
